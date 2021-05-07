@@ -23,10 +23,11 @@ app.listen(3000, function() {
 })
 
 var xlsx = require('node-xlsx')
-const { start } = require('repl')
+// const { start } = require('repl')
 // var fs = require('fs')
-const folderName = 'C:\\Users\\The man\\Desktop\\nodeFolder'
-var aimFile = folderName + '\\testxlsx.xlsx'
+// const folderName = 'C:\\Users\\The man\\Desktop\\nodeFolder'
+const folderName = process.env.HOME || process.env.USERPROFILE + '\\Desktop\\nodeFolder'
+// var aimFile = folderName + '\\testxlsx.xlsx'
 //! !用于结束后清空文件夹
 // var files = fs.readdirSync(folderName)
 // files.forEach((file) => {
@@ -212,6 +213,13 @@ app.get('/exportExcel', function(req, res) {
         res.end(result, 'binary')
       })
       conn.release()
+      //! !用于结束后清空文件夹
+      var files = fs.readdirSync(folderName)
+      files.forEach((file) => {
+        fs.unlink(folderName + '\\' + file, (err) => {
+          if (err) throw err
+        })
+      })
     }
   })
 })
