@@ -8,10 +8,22 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "child_process": "^1.0.2",
     "core-js": "^3.6.5",
     "element-ui": "^2.14.1",
+    "eventproxy": "^1.0.0",
+    "excel-export": "^0.5.1",
+    "express": "^4.17.1",
+    "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
-    "vue": "^2.6.11"
+    "node-xlsx": "^0.16.1",
+    "pkg": "^5.1.0",
+    "sass-loader": "^11.0.1",
+    "superagent": "^6.1.0",
+    "utility": "^1.17.0",
+    "vue": "^2.6.11",
+    "xlsx": "^0.16.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
