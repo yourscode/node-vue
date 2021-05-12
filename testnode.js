@@ -52,6 +52,8 @@ function insert(sql, item) {
     })
   })
 }
+// flag 用于标志状态
+var flag = null
 function modifyFolder(params) {
   try {
     if (!fs.existsSync(folderName)) {
@@ -94,6 +96,7 @@ function modifyFolder(params) {
             userTableData.push(...phoneNums)
           }
         }
+        flag = 1
         console.log(userTableData)
         var phoneData = [];
         (async() => {
@@ -161,19 +164,33 @@ app.get('/exportExcel', function(req, res) {
   // 创建一个写入格式map，其中cols(表头)，rows(每一行的数据);
   const conf = {}
   // 手动创建表头中的内容
-  const cols = ['电话', '城市', '看管人姓名', '区县编号']
+  // const cols = ['电话', '城市', '看管人姓名', '区县编号']
+  // const cols = ['phoneNumber', '地市', '集团名称(与证件上一致)', '集团成员手机号', '建档集团编号(92、JX)', '建档集团名称',
+  //   '区县编号',
+  //   '看管人BOSS工号',
+  //   '看管人姓名',
+  //   '看管人手机号码',
+  //   '集团成员姓名',
+  //   '集团成员职务',
+  //   '关键成员标识\n(下拉可选)',
+  //   '成员属性\n(下拉可选)',
+  //   '看管线条\n(下拉可选)',
+  //   '主管/网格长姓名',
+  //   '主管/网格长工号',
+  //   '主管/网格长手机号码',
+  //   '备注']
   // 在conf中添加cols
   conf.cols = []
-  for (let i = 0; i < cols.length; i++) {
-    // 创建表头数据所对应的类型,其中包括 caption内容 type类型
-    const tits = {}
-    // 添加内容
-    tits.caption = cols[i]
-    // 添加对应类型，这类型对应数据库中的类型，入number，data但一般导出的都是转换为string类型的
-    tits.type = 'string'
-    // 将每一个表头加入cols中
-    conf.cols.push(tits)
-  }
+  // for (let i = 0; i < cols.length; i++) {
+  //   // 创建表头数据所对应的类型,其中包括 caption内容 type类型
+  //   const tits = {}
+  //   // 添加内容
+  //   tits.caption = cols[i]
+  //   // 添加对应类型，这类型对应数据库中的类型，入number，data但一般导出的都是转换为string类型的
+  //   tits.type = 'string'
+  //   // 将每一个表头加入cols中
+  //   conf.cols.push(tits)
+  // }
   // mysql查询数据库的用户信息
   // userModel.find({}, function(err, data) {
   pool.getConnection((err, conn) => {
@@ -181,13 +198,28 @@ app.get('/exportExcel', function(req, res) {
       // 执行出错
       throw err
     } else {
-      var sql = `SELECT DISTINCT a.phoneNumber,b.地市,b.看管人姓名,b.区县编号 from tel a INNER JOIN sheet1 b on a.phoneNumber = b.看管人手机号码;
+      // var sql = `SELECT DISTINCT a.phoneNumber,b.地市,b.看管人姓名,b.区县编号 from tel a INNER JOIN sheet1 b on a.phoneNumber = b.看管人手机号码;
+      // drop table test;CREATE TABLE test(phone_id VARCHAR(20),userName VARCHAR(20));`
+      var sql = `select b.phoneNumber,a.* from sheet1 a RIGHT JOIN tel b on a.集团成员手机号 = b.phoneNumber;
       drop table test;CREATE TABLE test(phone_id VARCHAR(20),userName VARCHAR(20));`
       conn.query(sql, (err, data) => {
         if (err) throw err
-        // console.log(data)
+        // console.log(data[0][0])
+        const rows = []
+        for (const key in data[0][0]) {
+          // 创建表头数据所对应的类型,其中包括 caption内容 type类型
+          const tits = {}
+          // 添加内容
+          tits.caption = key
+          // 添加对应类型，这类型对应数据库中的类型，入number，data但一般导出的都是转换为string类型的
+          tits.type = 'string'
+          // 将每一个表头加入cols中
+          conf.cols.push(tits)
+          rows.push(key)
+        }
+        console.log(rows)
         // 创建一个和表头对应且名称与数据库字段对应数据，便于循环取出数据
-        const rows = ['phoneNumber', '地市', '看管人姓名', '区县编号']
+        // const rows = ['phoneNumber', '地市', '看管人姓名', '区县编号']
         // 用于承载数据库中的数据
         const datas = []
         // 循环数据库得到的数据
@@ -202,7 +234,7 @@ app.get('/exportExcel', function(req, res) {
           datas.push(row)
         }
         conf.rows = datas
-        console.log(datas)
+        // console.log(datas, data)
         // 将所有数据写入nodeExcel中
         const result = nodeExcel.execute(conf)
         // 设置响应头，在Content-Type中加入编码格式为utf-8即可实现文件内容支持中文
@@ -224,6 +256,14 @@ app.get('/exportExcel', function(req, res) {
   })
 })
 
+// 打开浏览器
+console.log('this is flag', flag)
+
+setTimeout(() => {
+  if (flag === 1) {
+    chrome.exec('start http://localhost:3000/exportExcel')
+  }
+}, 3000)
 // 读取Excel数据
 /*
 try {
@@ -307,8 +347,6 @@ try {
   console.log('excel读取异常,error=%s', e.stack)
 }
 */
-// 打开浏览器
-// chrome.exec('start http://localhost:3000/exportExcel')
 
 // const first = new Promise((resolve, reject) => {
 //   setTimeout(resolve, 500, '第一个')
@@ -320,3 +358,26 @@ try {
 // Promise.race([first, second]).then(result => {
 //   console.log(result) // 第二个
 // })
+
+// ['地市'
+// ,'集团名称(与证件上一致)'
+// ,'集团成员手机号'
+// ,'建档集团编号(92、JX)'
+// ,'建档集团名称'
+// ,'区县编号'
+// ,'看管人BOSS工号'
+// ,'看管人姓名'
+// ,'看管人手机号码'
+// ,'集团成员姓名'
+// ,'集团成员职务'
+// ,'关键成员标识'
+// ,'(下拉可选)'
+// ,'成员属性'
+// ,'(下拉可选)'
+// ,'看管线条
+// ,'(下拉可选)'
+// ,'主管/网格长姓名'
+// ,'主管/网格长工号'
+// ,'主管/网格长手机号码'
+// ,'备注']
+
