@@ -257,7 +257,7 @@ function modifyFolder(params) {
                     userTableData.push(...phoneNums)
                   }
                 }
-                // console.log(userTableData)
+                console.log('走访表数据提取：', userTableData)
                 var phoneData = [];
                 (async() => {
                   pool.getConnection((err, conn) => {
@@ -310,7 +310,7 @@ function modifyFolder(params) {
               var singleIndex = ''
               for (var val1 in tableData1) {
                 var itemData1 = tableData1[val1]
-                console.log(itemData1.data)
+                // console.log(itemData1.data)
                 for (var i = 0; i < itemData1.data.length; i++) {
                 // 0为表头数据
                   if (i === 0) {
@@ -324,7 +324,7 @@ function modifyFolder(params) {
                     userTableData1.push(...phoneNums1)
                   }
                 }
-                // console.log(userTableData1)
+                console.log('通话表数据提取：', userTableData1)
                 var phoneData1 = [];
                 (async() => {
                   pool.getConnection((err, conn) => {
@@ -365,7 +365,7 @@ function modifyFolder(params) {
 }
 
 modifyFolder().then(function() {
-  console.log(111111111111111111111111111111111111111111111111111111)
+  // console.log(111111111111111111111111111111111111111111111111111111)
   // chrome.exec('start http://localhost:3000/exportExcel')
   // chrome.exec('start http://localhost:3000/exportExcel2')
 })
