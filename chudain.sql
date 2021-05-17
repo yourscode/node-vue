@@ -84,3 +84,10 @@ left join zsy_tmp2 b on a.phone_id=b.user_number;
       '备注': '0129提供',
       '是否走访': '是'
     },
+
+
+---集客触点汇总数据提取 
+SELECT f.* ,(f.通话用户数/f.目标用户数) as 通话率,(f.走访用户数/f.目标用户数) as 走访率 from  (select COALESCE(d.区县编号,'总计') AS 区县编号,count(区县编号) 目标用户数,SUM(d.是否通话) 通话用户数,SUM(d.是否走访) 走访用户数  from
+(select a.* ,case when c.phoneNumber  is not null then '是' else '否' end 是否走访  from 
+(select b.phone_id,a.* , case when a.地市 is not null then '是' else '否' end 是否通话 
+ from sheet1 a INNER JOIN converse b on a.集团成员手机号 = b.phone_id) a LEFT JOIN tel c on a.phone_id = c.phoneNumber) d GROUP BY 区县编号 WITH ROLLUP) f 
