@@ -20,7 +20,7 @@ drop table zsy_tmp2;
 create table zsy_tmp2 as
 select a.bill_month,a.user_number,a.user_id,a.opp_user_number,a.call_type,a.duration,a.start_time
 from jf.dr_gsm_792_20210203@jfxdcx a 
-inner join zsy_tmp b on a.user_number=b.phone_id
+inner join zsy_tmp b on a.user_number=b.s_tel
 inner join zsy_tmp1 c on a.opp_user_number=c.phone_id where 1=2; 
 
 select  max(start_time)  from zsy_tmp2 
@@ -43,7 +43,7 @@ Loop
  execute immediate 'insert into zsy_tmp2 
 select a.bill_month,a.user_number,a.user_id,a.opp_user_number,a.call_type,a.duration,a.start_time
 from jf.dr_gsm_792_'||p_bill_date||'@jfxdcx a 
-inner join zsy_tmp141 b on substr(a.user_number,1,11)=substr(b.phone_id,1,11)
+inner join zsy_tmp141 b on substr(a.user_number,1,11)=substr(b.s_tel,1,11)
 inner join zsy_tmp1 c on substr(a.opp_user_number,1,11)=substr(c.phone_id,1,11) ';
  commit;
  Exit When m=0;
@@ -89,5 +89,143 @@ left join zsy_tmp2 b on a.phone_id=b.user_number;
 ---集客触点汇总数据提取 
 SELECT f.* ,(f.通话用户数/f.目标用户数) as 通话率,(f.走访用户数/f.目标用户数) as 走访率 from  (select COALESCE(d.区县编号,'总计') AS 区县编号,count(区县编号) 目标用户数,SUM(d.是否通话) 通话用户数,SUM(d.是否走访) 走访用户数  from
 (select a.* ,case when c.phoneNumber  is not null then '是' else '否' end 是否走访  from 
-(select b.phone_id,a.* , case when a.地市 is not null then '是' else '否' end 是否通话 
- from sheet1 a INNER JOIN converse b on a.集团成员手机号 = b.phone_id) a LEFT JOIN tel c on a.phone_id = c.phoneNumber) d GROUP BY 区县编号 WITH ROLLUP) f 
+(select b.s_tel,a.* , case when a.地市 is not null then '是' else '否' end 是否通话 
+ from sheet1 a INNER JOIN converse b on a.集团成员手机号 = b.s_tel) a LEFT JOIN tel c on a.phone_id = c.phoneNumber) d GROUP BY 区县编号 WITH ROLLUP) f 
+
+
+ =A1&B1&C1&D1&E1&F1&G1&H1&I1&J1&K1&L1&M1&N1&O1&P1&Q1&R1&S1&T1&U1&V1&W1&X1&Y1&Z1&AA1
+
+
+
+select m.*,n.二月流量,n.imei from (select e.*,f.三月流量 from (select b.s_tel,sum(total单位kb)  as 四月流量 from 
+(select b.s_tel,a.rating_res total单位kb,a.imei from zt_gprs_202104 a right join crm3_hzh_small b on a.user_number = b.s_tel) b 
+group by b.s_tel) e right join 
+(select b.s_tel,sum(total单位kb)  as 三月流量 from 
+(select b.s_tel,a.rating_res total单位kb,a.imei from zt_gprs_202103 a right join crm3_hzh_small b on a.user_number = b.s_tel) b 
+group by b.s_tel) f on e.phone_id = f.s_tel) m right join
+(select b.s_tel,sum(total单位kb)  as 二月流量,b.imei from 
+(select b.s_tel,a.rating_res total单位kb,a.imei from zt_gprs_202102 a right join crm3_hzh_small b on a.user_number = b.s_tel) b 
+group by b.s_tel,b.imei) n on m.phone_id = n.s_tel
+
+
+
+
+
+
+
+
+--小微取数需求
+--select * from crm3_dnp_lc_plan_1 where REGEXP_LIKE(offer_value,'18')
+
+--drop table crm3_hzh_small;
+--create table crm3_hzh_small(s_id varchar(100),s_name varchar(100),s_type varchar(100),s_typecode varchar(100),
+--s_tel varchar(100),s_pname varchar(100),s_citycode varchar(100),s_cityname varchar(100),s_wanggename varchar(100),s_adname varchar(100));
+
+--  套餐值 select * from crm3_dnp_lc_plan_1
+select * from crm3_hzh_small
+select b.*, a.state_name,a.offer_id,a.order_name,a.create_date,a.county_name,a.organize_name,a.weigth,a.is_kd,a.is_zdyj,
+a.fee_1 四月消费,a.fee_2 三月消费,a.fee_3 二月消费,a.volume_1 四月语音,a.volume_2 三月语音,a.volume_3 二月语音,a.积分,a.offer_id from crm3_zt_sa a 
+right join crm3_hzh_small b on b.s_tel = a.phone_id
+
+
+--drop table crm3_hzh_flowsmall;
+--create table crm3_hzh_flowsmall as
+select m.*,n.二月流量 from (select e.*,f.三月流量 from (select b.s_tel,sum(total单位kb)  as 四月流量 from 
+(select b.s_tel,a.rating_res total单位kb,a.imei from zt_gprs_202104 a right join crm3_hzh_small b on a.user_number = b.s_tel) b 
+group by b.s_tel) e right join 
+(select b.s_tel,sum(total单位kb)  as 三月流量 from 
+(select b.s_tel,a.rating_res total单位kb,a.imei from zt_gprs_202103 a right join crm3_hzh_small b on a.user_number = b.s_tel) b 
+group by b.s_tel) f on e.s_tel = f.s_tel) m right join
+(select b.s_tel,sum(total单位kb)  as 二月流量,b.imei from 
+(select b.s_tel,a.rating_res total单位kb,a.imei from zt_gprs_202102 a right join crm3_hzh_small b on a.user_number = b.s_tel) b 
+group by b.s_tel,b.imei) n on m.s_tel = n.s_tel
+
+
+select * from crm3_zt_sa
+select * from zt_gprs_202104
+select m.四月流量,m.三月流量,m.二月流量 from crm3_hzh_flowsmall m right join (select b.*, a.state_name,a.offer_id,a.order_name,a.create_date,a.county_name,a.organize_name,a.weigth,a.is_kd,a.is_zdyj,
+a.fee_1 四月消费,a.fee_2 三月消费,a.fee_3 二月消费,a.volume_1 四月语音,a.volume_2 三月语音,a.volume_3 二月语音,a.积分,a.offer_id from crm3_zt_sa a 
+right join crm3_hzh_small b on b.s_tel = a.phone_id) n on m.s_tel = n.s_tel
+
+
+
+
+select f.*,g.offer_value from (select b.*,a.* from crm3_hzh_flowsmall a right join (select b.*, a.state_name,a.offer_id,a.order_name,a.create_date,a.county_name,a.organize_name,a.weigth,a.is_kd,a.is_zdyj,
+a.fee_1 四月消费,a.fee_2 三月消费,a.fee_3 二月消费,a.volume_1 四月语音,a.volume_2 三月语音,a.volume_3 二月语音,a.积分,a.offer_id from crm3_zt_sa a 
+right join crm3_hzh_small b on b.s_tel = a.phone_id) b on a.s_tel = b.s_tel) f left join crm3_dnp_lc_plan_1 g on f.offer_id = g.offer_id
+
+
+select b.*,a.* from crm3_hzh_flowsmall a right join (select b.*, a.state_name,a.offer_id,a.order_name,a.create_date,a.county_name,a.organize_name,a.weigth,a.is_kd,a.is_zdyj,
+a.fee_1 四月消费,a.fee_2 三月消费,a.fee_3 二月消费,a.volume_1 四月语音,a.volume_2 三月语音,a.volume_3 二月语音,a.积分,a.offer_id from crm3_zt_sa a 
+right join crm3_hzh_small b on b.s_tel = a.phone_id) b on a.s_tel = b.s_tel
+
+
+
+select * from crm3_dnp_lc_plan_1
+
+
+
+select * from crm3_hzh_flowsmall m right join ()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+select b.*, a.state_name,a.offer_id,a.order_name,a.create_date,a.county_name,a.organize_name,a.weigth,a.is_kd,a.is_zdyj,
+a.fee_1 四月消费,a.fee_2 三月消费,a.fee_3 二月消费,a.volume_1 四月语音,a.volume_2 三月语音,a.volume_3 二月语音,a.积分,a.offer_id from crm3_zt_sa a 
+right join crm3_hzh_small b on b.s_tel = a.phone_id
+
+create table crm3_hzh_small(s_id varchar(100),s_name varchar(100),s_type varchar(100),s_typecode varchar(100),
+s_tel varchar(100),s_pname varchar(100),s_citycode varchar(100),s_cityname varchar(100),s_wanggename varchar(100),s_adname varchar(100));
+
+
+
+
+
+
+,
+a.fee_1 四月消费,a.fee_2 三月消费,a.fee_3 二月消费,a.volume_1 四月语音,a.volume_2 三月语音,a.volume_3 二月语音,a.积分,a.offer_id
+
+
+
+ SELECT f.* ,concat(TRUNCATE((f.通话用户数/f.目标用户数)* 100,2),'%') as 通话率,concat(TRUNCATE((f.走访用户数/f.目标用户数)* 100,2),'%') as 走访率 from  
+ (select COALESCE(d.区县编号,'总计') AS 区县编号,count(区县编号) 目标用户数,sum(case when d.是否通话 ='是' then 1 else 0 end) 通话用户数,sum(case when d.是否走访 ='是' then 1 else 0 end) 走访用户数  from
+      (select a.* ,case when c.phoneNumber  is not null then '是' else '否' end 是否走访  from 
+    (select b.phone_id,a.* , case when a.地市 is not null then '是' else '否' end 是否通话 
+   from sheet1 a INNER JOIN converse b on a.集团成员手机号 = b.phone_id) a LEFT JOIN tel c on a.phone_id = c.phoneNumber) d GROUP BY 区县编号,d.是否通话,d.是否走访 WITH ROLLUP) f ;
+
+
+SELECT f.* ,concat(TRUNCATE((f.通话用户数/f.目标用户数)* 100,2),'%') as 通话率,concat(TRUNCATE((f.走访用户数/f.目标用户数)* 100,2),'%') as 走访率 from  
+(select COALESCE(d.看管人姓名,'总计') AS 看管人姓名,d.区县编号,count(看管人姓名) 目标用户数,SUM(d.是否通话) 通话用户数,SUM(d.是否走访) 走访用户数  from
+      (select a.* ,case when c.phoneNumber  is not null then '是' else '否' end 是否走访  from 
+      (select b.phone_id,a.* , case when a.地市 is not null then '是' else '否' end 是否通话 
+       from sheet1 a INNER JOIN converse b on a.集团成员手机号 = b.phone_id) a LEFT JOIN tel c on a.phone_id = c.phoneNumber) d GROUP BY 区县编号,看管人姓名  WITH ROLLUP) f ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
