@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      id="viewport"
+      content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <title>Document</title>
+    <style>
+      #screen-change {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        overflow: hidden;
+        z-index: 10;
+      }
+      #screen-change.w {
+        height: 100vw;
+        width: 100vh;
+        transform: translate(-50%, -50%)  rotate(90deg);
+        -webkit-transform: translate(-50%, -50%)  rotate(90deg);
+      }
+      #screen-change.h {
+        height: 100vh;
+        width: 100vw;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+
+  <body id="screen-change" class="h">
+    <div>我要横屏显示</div>
+  </body>
+  <script>
+    !(function() {
+      var viewport = document.getElementById('viewport')
+      var dw = null
+      var screenChange = document.getElementById('screen-change')
+      function a() {
+        if (document.body.clientHeight > document.body.clientWidth) {
+          dw = 750 //页面的高度
+          screenChange.classList.remove('h')
+          screenChange.classList.add('w')
+        } else if (document.body.clientHeight < document.body.clientWidth) {
+          dw = 1334 //页面的宽度
+        }
+        viewport.setAttribute('content', 'width=' + dw + ', user-scalable=no')
+      }
+      a()
+      window.addEventListener(
+        'orientationchange',
+        function() {
+          if (window.orientation == 0) {
+            screenChange.classList.remove('h')
+            screenChange.classList.add('w')
+            dw = 750 //页面的高度
+            viewport.setAttribute(
+              'content',
+              'width=' + dw + ', user-scalable=no'
+            )
+          } else if (window.orientation == 90) {
+            screenChange.classList.remove('w')
+            screenChange.classList.add('h')
+            dw = 1334 //页面的宽度
+            viewport.setAttribute(
+              'content',
+              'width=' + dw + ', user-scalable=no'
+            )
+          }
+        },
+        false
+      )
+    })(window)
+  </script>
+</html>
+
+
+
+
+
+
+
+
+
+
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# This file contains the mappings of IP addresses to host names. Each
+# entry should be kept on an individual line. The IP address should
+# be placed in the first column followed by the corresponding host name.
+# The IP address and the host name should be separated by at least one
+# space.
+#
+# Additionally, comments (such as these) may be inserted on individual
+# lines or following the machine name denoted by a '#' symbol.
+#
+# For example:
+#
+# 102.54.94.97 rhino.acme.com # source server
+# 38.25.63.10 x.acme.com # x client host
+
+# localhost name resolution is handled within DNS itself.
+# 127.0.0.1 localhost
+# ::1 localhost
+
+########## BOSS系统 ###########
+#ESOP系统
+10.180.214.115 esop.crm.jx.cmcc
+10.176.248.144 esop.jxcrm.com
+
+#集合系统
+10.175.105.171 jhxt.crm.jx.cmcc
+
+#江西地市
+10.176.212.59 boss.jxdsj.org
+
+#商机管理、项目管理
+10.180.214.115 esop.crm.jx.cmcc
+10.226.28.121 sso.crm.jx.cmcc
+
+########## 省经营分析系统 #########
+10.175.40.75 jxbass
+
+10.175.4.27 jxbass
+
+10.175.52.25 jxmc-9b53f20c92
+
+10.175.40.69 jxmc-9b53f20c92
+
+10.175.40.78 jxmdot
+
+10.175.52.24 jxmdot
+
+10.175.40.66 jxbass2
+
+10.175.52.15 jxbass2
+
+10.175.40.67 jxmeta
+
+10.175.52.14 jxmeta
+
+10.175.40.77 ncmart
+
+10.175.104.79 ncmart
+
+10.175.40.76 jxmart
+
+10.181.170.200 jxmart
+
+10.175.40.68 server68
+
+10.175.104.89 server68
+
+10.175.40.70 server70
+
+10.175.104.141 server70
+
+10.175.40.65 server65
+
+10.175.52.10 server65
+
+10.175.40.72 server153
+
+10.181.170.153 server153
+
+########## 客服系统 ########
+#省端
+10.226.28.113 mgrpt.crm.jx.cmcc
+10.226.28.115 zq.crm.jx.cmcc
+10.226.28.117 crmccs.crm.jx.cmcc
+10.226.28.119 nc.crm.jx.cmcc
+10.226.28.121 sso.crm.jx.cmcc
+10.175.240.12 yjkf.jx.cmcc
+10.175.240.13 kf.jx.cmcc
+10.182.5.36 ngmttsso.rhkf.jx.cmcc
+
+#iscop
+10.186.89.200 iscop.cmcc.net
+10.186.89.209 tjyd-farm.iscop.com
+10.186.89.215 TJYD-GETWAY.iscop.com
+10.186.89.216 TJYD-AD.iscop.com
+
+#测试环境
+10.180.133.47 ngmttsso.kf.jx.cmcc
+10.180.133.95 ngcstest.jx.cs.cmos
+10.175.2.126 kftest.jx.cmcc
+10.176.248.53 ecrmtest.jxcrm.com
+
+#平台
+10.182.5.36 ngcs.jx.cs.cmos
+10.182.5.87 acs1.cti.jx.cmos
+10.182.5.214 acs2.cti.jx.cmos
+10.182.5.87 ucs1.cti.jx.cmos
+10.182.5.214 ucs2.cti.jx.cmos
+10.182.5.87 bms1.cti.jx.cmos
+10.182.5.214 bms2.cti.jx.cmos
+
+#一体化
+172.20.120.9	acs.crosscti.cs.cmos
+172.20.118.15	acs.cti.cs.cmos
+172.20.120.9	bms.cs.cmos
+172.20.120.9	bsp.cs.cmos
+172.20.120.9	cmim.cs.cmos
+172.20.120.9	crmpf.cs.cmos
+172.20.120.9	csf-admin.cs.cmos
+172.20.120.9	dmc.fxpt.cs.cmos
+172.20.118.15	edit.zsk.cs.cmos
+172.20.118.15	feedbackui.cs.cmos
+172.20.118.15	file.zsk.cs.cmos
+172.20.118.15	flow.cs.cmos
+172.20.118.15	frontlogger.cs.cmos
+172.20.120.10	he-embed.cs.cmos
+172.20.120.9	int.zsk.cs.cmos
+172.20.120.9	itcfg.cs.cmos
+172.20.120.9	logweb.cs.cmos
+172.20.120.9	nganoce.cs.cmos
+172.20.120.9	ngans.cs.cmos
+172.20.120.9	ngba.cs.cmos
+172.20.120.9	ngbmp.cs.cmos
+172.20.120.9	ngbusi.cs.cmos
+172.20.120.10	ngbusi-ah.cs.cmos
+172.20.120.10	ngbusi-bj.cs.cmos
+172.20.120.10	ngbusi-cq.cs.cmos
+172.20.120.10	ngbusi-fj.cs.cmos
+172.20.120.10	ngbusi-gd.cs.cmos
+172.20.120.10	ngbusi-gs.cs.cmos
+172.20.120.10	ngbusi-gx.cs.cmos
+172.20.120.10	ngbusi-gz.cs.cmos
+172.20.120.10	ngbusi-ha.cs.cmos
+172.20.120.10	ngbusi-hb.cs.cmos
+172.20.120.10	ngbusi-he.cs.cmos
+172.20.120.10	ngbusi-hi.cs.cmos
+172.20.120.10	ngbusi-hl.cs.cmos
+172.20.120.10	ngbusi-hn.cs.cmos
+172.20.120.10	ngbusi-jl.cs.cmos
+172.20.120.10	ngbusi-js.cs.cmos
+172.20.120.10	ngbusi-jx.cs.cmos
+172.20.120.10	ngbusi-ln.cs.cmos
+172.20.120.10	ngbusi-nm.cs.cmos
+172.20.118.15	ngbusi-nx.cs.cmos
+172.20.120.10	ngbusi-qh.cs.cmos
+172.20.120.10	ngbusi-sc.cs.cmos
+172.20.120.10	ngbusi-sd.cs.cmos
+172.20.120.10	ngbusi-sh.cs.cmos
+172.20.120.10	ngbusi-sn.cs.cmos
+172.20.120.10	ngbusi-sx.cs.cmos
+172.20.120.10	ngbusi-tj.cs.cmos
+172.20.120.10	ngbusi-xj.cs.cmos
+172.20.120.10	ngbusi-yn.cs.cmos
+172.20.120.10	ngbusi-zj.cs.cmos
+172.20.120.9	ngcct.cs.cmos
+172.20.120.9	ngcg.cs.cmos
+172.20.120.9	ngchnl.cs.cmos
+172.20.120.9	ngcr.cs.cmos
+172.20.118.15	ngcrmpf-gx.cs.cmos
+172.20.120.9	ngcs.cs.cmos
+172.20.120.10	ngcs.yn.cs.cmos
+172.20.120.9	ngcsbase.cs.cmos
+172.20.120.9	ngcscfg.cs.cmos
+172.20.120.9	ngcslog.cs.cmos
+172.20.120.9	ngesop.cs.cmos
+172.20.120.9	nghcall.cs.cmos
+172.20.120.9	ngim.cs.cmos
+172.20.120.9	ngimopenfire.cs.cmos
+172.20.120.9	ngivrmt.cs.cmos
+172.20.120.9	ngkm.cs.cmos
+172.20.120.9	ngkmcrm.cs.cmos
+172.20.120.10	nglocal-ah.cs.cmos
+172.20.120.10	nglocal-bj.cs.cmos
+172.20.120.10	nglocal-fj.cs.cmos
+172.20.120.10	nglocal-gs.cs.cmos
+172.20.120.10	nglocal-hb.cs.cmos
+172.20.120.10	nglocal-he.cs.cmos
+172.20.120.10	nglocal-hl.cs.cmos
+172.20.120.10	nglocal-hn.cs.cmos
+172.20.120.10	nglocal-jl.cs.cmos
+172.20.120.10	nglocal-js.cs.cmos
+172.20.120.10	nglocal-nm.cs.cmos
+172.20.120.10	nglocal-sc.cs.cmos
+172.20.120.10	nglocal-sd.cs.cmos
+172.20.120.10	nglocal-sn.cs.cmos
+172.20.120.10	nglocal-sx.cs.cmos
+172.20.120.10	nglocal-yn.cs.cmos
+172.20.120.9	ngmm.cs.cmos
+172.20.120.9	ngms.cs.cmos
+172.20.120.9	ngmtt.cs.cmos
+172.20.120.9	ngoc.cs.cmos
+172.20.120.104	ngocp.cs.cmos
+172.20.120.9	ngqss.cs.cmos
+172.20.120.18	ngqss.onest.cmos
+172.20.120.9	ngqssmanager.cs.cmos
+172.20.120.9	ngqualitypf.cs.cmos
+172.20.120.9	ngqualitywf.cs.cmos
+172.20.120.9	ngsh.cs.cmos
+172.20.120.9	ngtask.cs.cmos
+172.20.120.9	ngwf.cs.cmos
+172.20.120.10	ngwf-ah.cs.cmos
+172.20.120.10	ngwf-bj.cs.cmos
+172.20.120.10	ngwf-cq.cs.cmos
+172.20.120.10	ngwf-fj.cs.cmos
+172.20.120.10	ngwf-gd.cs.cmos
+172.20.120.10	ngwf-gs.cs.cmos
+172.20.120.10	ngwf-gx.cs.cmos
+172.20.120.10	ngwf-gz.cs.cmos
+172.20.120.10	ngwf-ha.cs.cmos
+172.20.120.10	ngwf-hb.cs.cmos
+172.20.120.10	ngwf-he.cs.cmos
+172.20.120.10	ngwf-hi.cs.cmos
+172.20.120.10	ngwf-hl.cs.cmos
+172.20.120.10	ngwf-hn.cs.cmos
+172.20.120.10	ngwf-jl.cs.cmos
+172.20.120.10	ngwf-js.cs.cmos
+172.20.120.10	ngwf-jx.cs.cmos
+172.20.120.10	ngwf-ln.cs.cmos
+172.20.120.10	ngwfnew-gx.cs.cmos
+172.20.120.10	ngwf-nm.cs.cmos
+172.20.118.15	ngwf-nx.cs.cmos
+172.20.120.10	ngwf-qh.cs.cmos
+172.20.120.10	ngwf-sc.cs.cmos
+172.20.120.10	ngwf-sd.cs.cmos
+172.20.120.10	ngwf-sh.cs.cmos
+172.20.120.10	ngwf-sn.cs.cmos
+172.20.120.10	ngwf-sx.cs.cmos
+172.20.120.10	ngwf-tj.cs.cmos
+172.20.118.15	ngwf-www.cs.cmos
+172.20.120.10	ngwf-xj.cs.cmos
+172.20.120.9	ngwfyj.cs.cmos
+172.20.120.10	ngwf-yn.cs.cmos
+172.20.120.10	ngwf-zj.cs.cmos
+172.20.120.9	ngwlan.cs.cmos
+172.20.120.10	ngwlanex.cs.cmos
+172.20.120.9	ngwlanmk.cs.cmos
+172.20.118.39	qualityfront.cs.cmos
+172.20.118.15	search.zsk.cs.cmos
+172.20.120.9	wf.cs.cmos
+172.20.120.9	restapi.crmpf.cs.core.cmos
+172.20.120.9	api.openfire.ngim.cs.glb.cmos
+172.20.120.10	orderzw.ngwlanfix.cs.glb.cmos
+172.20.120.9	restapi.agentservice.cs.glb.cmos
+172.20.120.9	restapi.cmim.cs.glb.cmos
+172.20.120.9	restapi.loggersearch-busi.cs.glb.cmos
+172.20.120.9	restapi.loggersearch-prod.cs.glb.cmos
+172.20.120.9	restapi.nganoce.cs.glb.cmos
+172.20.120.9	restapi.ngapproute.cs.glb.cmos
+172.20.120.9	restapi.ngba.cs.glb.cmos
+172.20.120.9	restapi.ngbmp.cs.glb.cmos
+172.20.120.9	restapi.ngbsitf.cs.glb.cmos
+172.20.120.9	restapi.ngbusi.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-ah.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-bj.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-cq.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-fj.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-gd.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-gs.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-gx.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-gz.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-ha.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-hb.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-he.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-hi.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-hl.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-hn.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-jl.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-js.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-jx.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-ln.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-nm.cs.glb.cmos
+172.20.118.15	restapi.ngbusi-nx.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-qh.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-sc.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-sd.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-sh.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-sn.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-sx.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-tj.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-xj.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-yn.cs.glb.cmos
+172.20.120.10	restapi.ngbusi-zj.cs.glb.cmos
+172.20.120.9	restapi.ngcc.cs.glb.cmos
+172.20.120.9	restapi.ngcct.cs.glb.cmos
+172.20.120.9	restapi.ngcg.cs.glb.cmos
+172.20.120.9	restapi.ngchnl.cs.glb.cmos
+172.20.120.9	restapi.ngcr.cs.glb.cmos
+172.20.120.9	restapi.ngcs.cs.glb.cmos
+172.20.120.9	restapi.ngcscfg.cs.glb.cmos
+172.20.120.9	restapi.ngcslog.cs.glb.cmos
+172.20.120.9	restapi.ngcsm.cs.glb.cmos
+172.20.120.9	restapi.ngcsnet.cs.glb.cmos
+172.20.120.9	restapi.ngesop.cs.glb.cmos
+172.20.120.9	restapi.ngivrmt.cs.glb.cmos
+172.20.120.10	restapi.nglocal-ah.cs.glb.cmos
+172.20.120.10	restapi.nglocal-bj.cs.glb.cmos
+172.20.120.10	restapi.nglocal-fj.cs.glb.cmos
+172.20.120.10	restapi.nglocal-gs.cs.glb.cmos
+172.20.120.10	restapi.nglocal-hb.cs.glb.cmos
+172.20.120.10	restapi.nglocal-he.cs.glb.cmos
+172.20.120.10	restapi.nglocal-hl.cs.glb.cmos
+172.20.120.10	restapi.nglocal-hn.cs.glb.cmos
+172.20.120.10	restapi.nglocal-jl.cs.glb.cmos
+172.20.120.10	restapi.nglocal-js.cs.glb.cmos
+172.20.120.10	restapi.nglocal-nm.cs.glb.cmos
+172.20.120.10	restapi.nglocal-sc.cs.glb.cmos
+172.20.120.10	restapi.nglocal-sd.cs.glb.cmos
+172.20.120.10	restapi.nglocal-sn.cs.glb.cmos
+172.20.120.10	restapi.nglocal-sx.cs.glb.cmos
+172.20.120.10	restapi.nglocal-yn.cs.glb.cmos
+172.20.120.9	restapi.ngmm.cs.glb.cmos
+172.20.120.9	restapi.ngmmgw.cs.glb.cmos
+172.20.120.9	restapi.ngmmserver.cs.glb.cmos
+172.20.120.9	restapi.ngms.cs.glb.cmos
+172.20.120.9	restapi.ngmtt.cs.glb.cmos
+172.20.120.9	restapi.ngoc.cs.glb.cmos
+172.20.120.9	restapi.ngqss.cs.glb.cmos
+172.20.120.9	restapi.ngqualitypf.cs.glb.cmos
+172.20.120.9	restapi.ngqualitypfvie.cs.glb.cmos
+172.20.120.9	restapi.ngqualitywf.cs.glb.cmos
+172.20.120.9	restapi.ngrc.cs.glb.cmos
+172.20.120.9	restapi.ngsh.cs.glb.cmos
+172.20.120.9	restapi.ngwf.cs.glb.cmos
+172.20.120.10	restapi.ngwf-ah.cs.glb.cmos
+172.20.120.10	restapi.ngwf-bj.cs.glb.cmos
+172.20.120.10	restapi.ngwf-cq.cs.glb.cmos
+172.20.120.10	restapi.ngwf-fj.cs.glb.cmos
+172.20.120.10	restapi.ngwf-gd.cs.glb.cmos
+172.20.120.10	restapi.ngwf-gs.cs.glb.cmos
+172.20.120.10	restapi.ngwf-gx.cs.glb.cmos
+172.20.120.10	restapi.ngwf-gz.cs.glb.cmos
+172.20.120.10	restapi.ngwf-ha.cs.glb.cmos
+172.20.120.10	restapi.ngwf-hb.cs.glb.cmos
+172.20.120.10	restapi.ngwf-he.cs.glb.cmos
+172.20.120.10	restapi.ngwf-hi.cs.glb.cmos
+172.20.120.10	restapi.ngwf-hl.cs.glb.cmos
+172.20.120.10	restapi.ngwf-hn.cs.glb.cmos
+172.20.120.10	restapi.ngwf-jl.cs.glb.cmos
+172.20.120.10	restapi.ngwf-js.cs.glb.cmos
+172.20.120.10	restapi.ngwf-jx.cs.glb.cmos
+172.20.120.10	restapi.ngwf-ln.cs.glb.cmos
+172.20.120.10	restapi.ngwfnew-gx.cs.glb.cmos
+172.20.120.10	restapi.ngwf-nm.cs.glb.cmos
+172.20.118.15	restapi.ngwf-nx.cs.glb.cmos
+172.20.120.10	restapi.ngwf-qh.cs.glb.cmos
+172.20.120.10	restapi.ngwf-sc.cs.glb.cmos
+172.20.120.10	restapi.ngwf-sd.cs.glb.cmos
+172.20.120.9	restapi.ngwfservice.cs.glb.cmos
+172.20.120.10	restapi.ngwf-sh.cs.glb.cmos
+172.20.120.10	restapi.ngwf-sn.cs.glb.cmos
+172.20.120.10	restapi.ngwf-sx.cs.glb.cmos
+172.20.120.10	restapi.ngwf-tj.cs.glb.cmos
+172.20.120.10	restapi.ngwf-xj.cs.glb.cmos
+172.20.120.10	restapi.ngwf-yn.cs.glb.cmos
+172.20.120.10	restapi.ngwf-zj.cs.glb.cmos
+172.20.120.10	restapi.ngwlanex.cs.glb.cmos
+172.20.120.9	restapi.ngwlanmk.cs.glb.cmos
+172.20.120.9	restapi.wf.cs.glb.cmos
+172.20.120.10	workflow.ngwlanfix.cs.glb.cmos
+172.20.120.9	ngcard.cs.cmos
+172.20.124.9	itcfg-ha.cs.cmos
+172.20.120.10	workflow.ngwlanfix-nx.cs.glb.cmos
+172.20.120.10	orderzw.ngwlanfix-nx.cs.glb.cmos
+
+#.onest
+172.20.120.18	mmp.onest.cmos
+172.20.120.18	ngba.onest.cmos
+172.20.120.18	ngbusi-ha.onest.cmos
+172.20.120.18	ngcsf.onest.cmos
+172.20.120.18	ngoc.onest.cmos
+172.20.120.18	noms.onest.cmos
+172.20.118.23	onest.glb.cmos
+
+#分析平台
+172.20.120.9	aqs.csap.cmos
+172.20.120.9	ars.csap.cmos
+172.20.120.9	cep.csap.cmos
+172.20.120.9	coc.csap.cmos
+172.20.120.9	dacp.csap.cmos
+172.20.120.9	dm.csap.cmos
+172.20.120.9	dmc.csap.cmos
+172.20.120.9	dt.csap.cmos
+172.20.120.9	dw.csap.cmos
+172.20.120.9	iam.csap.cmos
+172.20.120.9	mcd.csap.cmos
+172.20.120.9	mrpt.csap.cmos
+172.20.120.9	npdm.csap.cmos
+172.20.120.9	rpt.csap.cmos
+172.20.120.9	sa.csap.cmos
+172.20.120.9	server.csap.cmos
+172.20.120.9	ssr.csap.cmos
+172.20.120.9	usmpl-server.csap.cmos
+172.20.120.9	restapi.usmpl-server.csap.glb.cmos
+
+#网罗天下
+172.20.120.9	restapi.net.etw.glb.cmos
+172.20.120.9	restapi.netpom.etw.glb.cmos
+172.20.120.9	restapi.shop.etw.glb.cmos
+
+#前端插码
+172.20.120.9	frontlog.cmos
+172.20.120.104	gis.cmos
+172.20.120.104	restapi.gis.glb.cmos
+
+#H5营业厅
+172.20.120.9	mana.mmp.cmos
+172.20.120.9	restapi.mmp.glb.cmos
+
+#在线培训
+172.20.120.104	train.px.cmos
+
+#实名认证
+172.20.120.104	rnmsol.smrz.cmos
+172.20.116.28	restapi.smrz.glb.cmos
+
+#智能应答
+172.20.120.9	restapi.irp.znyd.glb.cmos
+
+#质检
+172.20.120.9	restapi.quality.ciq.glb.cmos
+172.20.120.9	quality.ciq.cmos
+172.20.120.9	restapi.ngcr.ciq.glb.cmos
+172.20.120.9	restapi.ngcs.ciq.glb.cmos
+172.20.120.9	ngcs.ciq.cmos
+172.20.120.9	restapi.ngmtt.ciq.glb.cmos
+172.20.120.9	ngmtt.ciq.cmos
+
+#4A DNS
+10.175.240.13 kf.jx.cmcc
+10.226.28.121 sso.crm.jx.cmcc
+10.226.28.119 nc.crm.jx.cmcc
+10.226.28.119 fs.crm.jx.cmcc
+10.226.28.119 jj.crm.jx.cmcc
+10.226.28.119 sr.crm.jx.cmcc
+10.226.28.119 xy.crm.jx.cmcc
+10.226.28.119 yt.crm.jx.cmcc
+10.226.28.119 yc.crm.jx.cmcc
+10.226.28.119 ja.crm.jx.cmcc
+10.226.28.119 gz.crm.jx.cmcc
+10.226.28.119 jdz.crm.jx.cmcc
+10.226.28.119 px.crm.jx.cmcc
+10.226.28.115 zq.crm.jx.cmcc
+10.226.28.113 mgrpt.crm.jx.cmcc
+10.226.28.111 jttc.crm.jx.cmcc
+10.226.28.117 crmccs.crm.jx.cmcc
+10.175.240.13 kf.jx.cmcc
+10.175.240.12 yjkf.jx.cmcc
+10.226.58.182 iesop.jxcrm.com
+10.180.214.115 esop.jxcrm.com
+10.226.58.182 iesop.crm.jx.cmcc
+10.180.214.115 esop.crm.jx.cmcc
+
+127.0.0.1 localhost
+::1 localhost

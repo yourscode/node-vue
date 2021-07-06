@@ -216,6 +216,54 @@ SELECT f.* ,concat(TRUNCATE((f.通话用户数/f.目标用户数)* 100,2),'%') a
        from sheet1 a INNER JOIN converse b on a.集团成员手机号 = b.phone_id) a LEFT JOIN tel c on a.phone_id = c.phoneNumber) d GROUP BY 区县编号,看管人姓名  WITH ROLLUP) f ;
 
 
+-- 
+-- 以导入的excel表得到通话人数7847条
+-- select * from (select a.* ,case when c.phoneNumber  is not null then '是' else '否' end 是否走访  from 
+--      (select b.phone_id,a.*,case when b.是否通话 = 1 then '是' else '否' end 是否通话
+				from sheet1 a RIGHT JOIN converse b on a.集团成员手机号 = b.phone_id ) a LEFT JOIN tel c on a.phone_id = c.phoneNumber) q where q.是否通话 = '是' 
+
+                for (var val1 in tableData1) {
+                  var itemData1 = tableData1[val1]
+                  for (var i = 0; i < itemData1.data.length; i++) {
+                  // 0为表头数据
+                    if (i === 0) {
+                      singleIndex = itemData1.data[i].findIndex((item) => item === itemData1.data[0][0])
+                      continue
+                    }
+                    // var regx1 = /(1[\d]{2}[\s]?[\d]{4}[\s]?[\d]{4})/g
+                    var str1 = itemData1.data[i]
+                    // var phoneNums1 = str1.match(regx1)
+                    // if (phoneNums1 !== null) {
+                    // }
+                    userTableData1.push(str1)
+                  }
+                  console.log('通话表数据提取：', userTableData1)
+                  var phoneData1 = [];
+                  (async() => {
+                    pool.getConnection((err, conn) => {
+                      if (err) throw err
+                      var sql = `Truncate Table converse;`
+                      conn.query(sql, (err, result) => {
+                        if (err) throw err
+                      })
+                      conn.release()
+                    })
+                    for (const i of userTableData1) {
+                      const sql = `insert converse(phone_id,是否通话) values('${i[0]}','${i[1]}')`
+                      await insert(sql)
+                      phoneData1.push(i[0])
+                    }
+                    console.log('通话表已经导入数据库')
+                    resolve()
+                  })()
+                }
+
+
+--以匹配本地数据库 的方式进行通话记录查询
+select * from (select a.* ,case when c.phoneNumber  is not null then '是' else '否' end 是否走访  from 
+      (select b.phone_id,a.* , case when a.地市 is not null then '是' else '否' end 是否通话 
+      from sheet1 a RIGHT JOIN converse b on a.集团成员手机号 = b.phone_id ) a LEFT JOIN tel c on a.phone_id = c.phoneNumber) q where q.是否通话 = '是' 
+
 
 
 
