@@ -23,6 +23,7 @@ var app = express()
 // })
 
 var xlsx = require('node-xlsx')
+const { type } = require('os')
 // const { resolve } = require('path')
 // const { reject } = require('core-js/fn/promise')
 // const { reject } = require('core-js/fn/promise')
@@ -76,6 +77,21 @@ function modifyFolder(params) {
                   // 下标数据
                   var itemData = tableData[val]
                   // console.log(itemData.data[0].push(','))
+                  console.log(process.argv[2])
+                  const argvVal = process.argv[2]
+                  if (argvVal !== undefined) {
+                    const mapValue = itemData.data.map(item => {
+                      var insertArr = []
+                      for (let index = 0; index < argvVal.length; index++) {
+                        if (item[Number(argvVal[index]) - 1] !== undefined) {
+                          insertArr.push(item[Number(argvVal[index]) - 1])
+                        }
+                      }
+                      return insertArr
+                    })
+                    console.log(mapValue)
+                    itemData.data = mapValue
+                  }
                   for (var index = 0; index < itemData.data.length; index++) {
                     // 0为表头数据.
                     // if (index === 0) {
@@ -122,7 +138,8 @@ function modifyFolder(params) {
                   //   var testData = xlsx.parse('./text3.xlsx')
                   //   console.log(testData)
                   // })
-                  const configUrl = path.join('C:/Users/The man/Desktop/', 'text3.txt')
+
+                  const configUrl = path.join(process.env.HOME || process.env.USERPROFILE + '/Desktop/', 'text3.txt')
 
                   fs.writeFile(configUrl, tableSum, function(err) {
                     console.log(err)
