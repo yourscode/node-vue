@@ -72,81 +72,82 @@ function modifyFolder(params) {
                 var tableSum = ''
                 // 表数据
                 var tableData = xlsx.parse(oldName)
-                // 循环读取表数据
-                for (var val in tableData) {
-                  // 下标数据
-                  var itemData = tableData[val]
-                  // console.log(itemData.data[0].push(','))
-                  console.log(process.argv[2])
-                  const argvVal = process.argv[2]
-                  if (argvVal !== undefined) {
-                    const mapValue = itemData.data.map(item => {
-                      var insertArr = []
-                      for (let index = 0; index < argvVal.length; index++) {
-                        if (item[Number(argvVal[index]) - 1] !== undefined) {
-                          insertArr.push(item[Number(argvVal[index]) - 1])
-                        }
-                      }
-                      return insertArr
-                    })
-                    console.log(mapValue)
-                    itemData.data = mapValue
-                  }
-                  for (var index = 0; index < itemData.data.length; index++) {
-                    // 0为表头数据.
-                    // if (index === 0) {
-                    //   // itemData.data[0].push(',')
-                    //   continue
-                    // }
-                    // console.log(itemData.data[0])
-                    var arr = itemData.data[index]
-                    const singleArr = []
-                    for (const i of arr) {
-                      if (i !== arr[arr.length - 1]) {
-                        // singleArr.push([i], ',')
-                        singleArr.push([i])
-                      } else {
-                        singleArr.push([i] + '\n')
+                // 循环读取表中所有sheet的数据
+                // for (var val in tableData) {
+                // 下标数据
+                var itemData = tableData[0]
+                // console.log(itemData.data[0].push(','))
+                console.log(process.argv[2])
+                const argvVal = process.argv[2].split(',' || '，')
+                console.log(argvVal)
+                if (argvVal !== undefined) {
+                  const mapValue = itemData.data.map(item => {
+                    var insertArr = []
+                    for (let index = 0; index < argvVal.length; index++) {
+                      if (item[Number(argvVal[index]) - 1] !== undefined) {
+                        insertArr.push(item[Number(argvVal[index]) - 1])
                       }
                     }
-                    userTableData.push(singleArr)
-                    tableSum = tableSum + singleArr
-                    // console.log(userTableData)
-                    // 进制转换
-                    // var str = itemData.data[index][2] + ''
-                    // var phoneNums = str.split('-')
-                    // var firstNum = Number(phoneNums[2]).toString(16)
-                    // var secondNum = Number(phoneNums[3]).toString(16)
-                    // if (secondNum.length === 1) {
-                    //   secondNum = '0' + secondNum
-                    // }
-                    // var mergeNum = firstNum + secondNum
-                    // if (phoneNums !== null) {
-                    //   userTableData.push([parseInt(mergeNum, 16)])
-                    // }
-                    // console.log(index)
-                  }
-                  // 导出excel
-                  // var buffer = xlsx.build([{ name: 'sheets', data: userTableData }])
-                  // fs.writeFile('./text3.xlsx', buffer, function (err) {
-                  //   if (err) {
-                  //     return console.error(err)
-                  //   }
-                  //   console.log('数据写入成功！')
-                  //   console.log('--------我是分割线-------------')
-                  //   console.log('读取写入的数据！')
-                  //   var testData = xlsx.parse('./text3.xlsx')
-                  //   console.log(testData)
-                  // })
-
-                  const configUrl = path.join(process.env.HOME || process.env.USERPROFILE + '/Desktop/', 'text3.txt')
-
-                  fs.writeFile(configUrl, tableSum, function(err) {
-                    console.log(err)
+                    return insertArr
                   })
-                  // console.log('走访表数据提取：', userTableData)
-                  // console.log('走访表数据提取：', tableSum)
+                  itemData.data = mapValue
+                  // console.log(mapValue)
                 }
+                for (var index = 0; index < itemData.data.length; index++) {
+                  // 0为表头数据.
+                  // if (index === 0) {
+                  //   // itemData.data[0].push(',')
+                  //   continue
+                  // }
+                  // console.log(itemData.data[0])
+                  var arr = itemData.data[index]
+                  const singleArr = []
+                  for (const i of arr) {
+                    if (i !== arr[arr.length - 1]) {
+                      // singleArr.push([i], ',')
+                      singleArr.push([i])
+                    } else {
+                      singleArr.push([i] + '\n')
+                    }
+                  }
+                  userTableData.push(singleArr)
+                  tableSum = tableSum + singleArr
+                  // console.log(userTableData)
+                  // 进制转换
+                  // var str = itemData.data[index][2] + ''
+                  // var phoneNums = str.split('-')
+                  // var firstNum = Number(phoneNums[2]).toString(16)
+                  // var secondNum = Number(phoneNums[3]).toString(16)
+                  // if (secondNum.length === 1) {
+                  //   secondNum = '0' + secondNum
+                  // }
+                  // var mergeNum = firstNum + secondNum
+                  // if (phoneNums !== null) {
+                  //   userTableData.push([parseInt(mergeNum, 16)])
+                  // }
+                  // console.log(index)
+                }
+                // 导出excel
+                // var buffer = xlsx.build([{ name: 'sheets', data: userTableData }])
+                // fs.writeFile('./text3.xlsx', buffer, function (err) {
+                //   if (err) {
+                //     return console.error(err)
+                //   }
+                //   console.log('数据写入成功！')
+                //   console.log('--------我是分割线-------------')
+                //   console.log('读取写入的数据！')
+                //   var testData = xlsx.parse('./text3.xlsx')
+                //   console.log(testData)
+                // })
+
+                const configUrl = path.join(process.env.HOME || process.env.USERPROFILE + '/Desktop/', 'text3.txt')
+
+                fs.writeFile(configUrl, tableSum, function(err) {
+                  console.log(err)
+                })
+                // console.log('走访表数据提取：', userTableData)
+                // console.log('走访表数据提取：', tableSum)
+                // }
                 // console.log('-------------end-------------')
               } catch (e) {
                 // 输出日志
