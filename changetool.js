@@ -78,9 +78,10 @@ function modifyFolder(params) {
                 var itemData = tableData[0]
                 // console.log(itemData.data[0].push(','))
                 console.log(process.argv[2])
-                const argvVal = process.argv[2].split(',' || '，')
+                var argvVal = process.argv[2]
                 console.log(argvVal)
                 if (argvVal !== undefined) {
+                  argvVal = process.argv[2].split(',' || '，')
                   const mapValue = itemData.data.map(item => {
                     var insertArr = []
                     for (let index = 0; index < argvVal.length; index++) {
