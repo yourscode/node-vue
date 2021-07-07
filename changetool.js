@@ -88,11 +88,12 @@ function modifyFolder(params) {
                       if (item[Number(argvVal[index]) - 1] !== undefined) {
                         insertArr.push(item[Number(argvVal[index]) - 1])
                       }
+                      // console.log('hello world')
                     }
                     return insertArr
                   })
                   itemData.data = mapValue
-                  // console.log(mapValue)
+                  console.log(mapValue)
                 }
                 for (var index = 0; index < itemData.data.length; index++) {
                   // 0为表头数据.
@@ -105,6 +106,7 @@ function modifyFolder(params) {
                   if (index === 0) {
                     itemData.data[index].push('CGI转译')
                   } else {
+                    // !!!如果选择列的话需要修改下面数组的下标
                     var str = itemData.data[index][2] + ''
                     var phoneNums = str.split('-')
                     var firstNum = Number(phoneNums[2]).toString(16)
