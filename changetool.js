@@ -96,16 +96,30 @@ function modifyFolder(params) {
                 }
                 for (var index = 0; index < itemData.data.length; index++) {
                   // 0为表头数据.
-                  // if (index === 0) {
                   //   // itemData.data[0].push(',')
                   //   continue
                   // }
-                  // console.log(itemData.data[0])
+                  // console.log(itemData.data[index])
+                  // if (index === 2) {
+                  // 进制转换
+                  if (index === 0) {
+                    itemData.data[index].push('CGI转译')
+                  } else {
+                    var str = itemData.data[index][2] + ''
+                    var phoneNums = str.split('-')
+                    var firstNum = Number(phoneNums[2]).toString(16)
+                    var secondNum = Number(phoneNums[3]).toString(16)
+                    if (secondNum.length === 1) {
+                      secondNum = '0' + secondNum
+                    }
+                    var mergeNum = firstNum + secondNum
+                    itemData.data[index].push(parseInt(mergeNum, 16))
+                  }
                   var arr = itemData.data[index]
                   const singleArr = []
                   for (const i of arr) {
                     if (i !== arr[arr.length - 1]) {
-                      // singleArr.push([i], ',')
+                    // singleArr.push([i], ',')
                       singleArr.push([i])
                     } else {
                       singleArr.push([i] + '\n')
@@ -113,20 +127,6 @@ function modifyFolder(params) {
                   }
                   userTableData.push(singleArr)
                   tableSum = tableSum + singleArr
-                  // console.log(userTableData)
-                  // 进制转换
-                  // var str = itemData.data[index][2] + ''
-                  // var phoneNums = str.split('-')
-                  // var firstNum = Number(phoneNums[2]).toString(16)
-                  // var secondNum = Number(phoneNums[3]).toString(16)
-                  // if (secondNum.length === 1) {
-                  //   secondNum = '0' + secondNum
-                  // }
-                  // var mergeNum = firstNum + secondNum
-                  // if (phoneNums !== null) {
-                  //   userTableData.push([parseInt(mergeNum, 16)])
-                  // }
-                  // console.log(index)
                 }
                 // 导出excel
                 // var buffer = xlsx.build([{ name: 'sheets', data: userTableData }])
@@ -147,7 +147,7 @@ function modifyFolder(params) {
                   console.log(err)
                 })
                 // console.log('走访表数据提取：', userTableData)
-                // console.log('走访表数据提取：', tableSum)
+                console.log('走访表数据提取：', tableSum)
                 // }
                 // console.log('-------------end-------------')
               } catch (e) {
@@ -159,7 +159,7 @@ function modifyFolder(params) {
           }
         }
         Promise.all([promise1]).then(() => {
-          console.log('即将打开浏览器...')
+          console.log('请查看桌面text3.txt文件...')
         })
       } else {
         console.log('请放入：CGI.xlsx的excel文件！')
