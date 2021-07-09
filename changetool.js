@@ -85,7 +85,9 @@ function modifyFolder(params) {
                   const mapValue = itemData.data.map(item => {
                     var insertArr = []
                     for (let index = 0; index < argvVal.length; index++) {
-                      if (item[Number(argvVal[index]) - 1] !== undefined) {
+                      if (item[Number(argvVal[index]) - 1] === undefined || item[Number(argvVal[index]) - 1] === '#N/A' || item[Number(argvVal[index]) - 1] === '') {
+                        insertArr.push('null')
+                      } else {
                         insertArr.push(item[Number(argvVal[index]) - 1])
                       }
                       // console.log('hello world')
@@ -93,7 +95,7 @@ function modifyFolder(params) {
                     return insertArr
                   })
                   itemData.data = mapValue
-                  console.log(mapValue)
+                  // console.log(mapValue)
                 }
                 for (var index = 0; index < itemData.data.length; index++) {
                   // 0为表头数据.
@@ -103,33 +105,59 @@ function modifyFolder(params) {
                   // console.log(itemData.data[index])
                   // if (index === 2) {
                   // 进制转换
-                  if (index === 0) {
-                    itemData.data[index].push('CGI转译')
-                  } else {
-                    // !!!如果选择列的话需要修改下面数组的下标
-                    var str = itemData.data[index][2] + ''
-                    var phoneNums = str.split('-')
-                    var firstNum = Number(phoneNums[2]).toString(16)
-                    var secondNum = Number(phoneNums[3]).toString(16)
-                    if (secondNum.length === 1) {
-                      secondNum = '0' + secondNum
-                    }
-                    var mergeNum = firstNum + secondNum
-                    itemData.data[index].push(parseInt(mergeNum, 16))
-                  }
+                  // if (index === 0) {
+                  //   itemData.data[index].push('CGI转译')
+                  // } else {
+                  //   // !!!如果选择列的话需要修改下面数组的下标
+                  //   var str = itemData.data[index][1] + ''
+                  //   var phoneNums = str.split('-')
+                  //   var firstNum = Number(phoneNums[2]).toString(16)
+                  //   var secondNum = Number(phoneNums[3]).toString(16)
+                  //   if (secondNum.length === 1) {
+                  //     secondNum = '0' + secondNum
+                  //   }
+                  //   var mergeNum = firstNum + secondNum
+                  //   itemData.data[index].push(parseInt(mergeNum, 16))
+                  // }
                   var arr = itemData.data[index]
-                  const singleArr = []
-                  for (const i of arr) {
-                    if (i !== arr[arr.length - 1]) {
+                  // console.log(arr)
+                  // const singleArr = []
+                  // for (const i of arr) {
+                  //   if (i === '#N/A' || i === '' || i === undefined) {
+                  //     // eslint-disable-next-line no-const-assign
+                  //     // i = 'null'
+                  //     // console.log(i, 1111111)
+                  //     singleArr.push(['null'])
+                  //   } else if (i !== arr[arr.length - 1]) {
+                  //   // singleArr.push([i], ',')
+                  //     singleArr.push([i])
+                  //   } else {
+                  //     singleArr.push([i] + '\n')
+                  //   }
+                  // }
+                  // another way
+                  var singleArr = []
+                  var singleArr1 = arr.filter((cur, index) => {
+                    if (cur === '#N/A' || cur === '' || cur === undefined) {
+                      // eslint-disable-next-line no-const-assign
+                      // i = 'null'
+                      // console.log(i, 1111111)
+                      singleArr.push(['null'])
+                    } else if (index !== (arr.length - 1)) {
                     // singleArr.push([i], ',')
-                      singleArr.push([i])
+                      singleArr.push([cur])
                     } else {
-                      singleArr.push([i] + '\n')
+                      singleArr.push([cur] + '\n')
+                      singleArr.push('\n')
                     }
-                  }
+                    return singleArr
+                  })
+                  singleArr = singleArr1
                   userTableData.push(singleArr)
-                  tableSum = tableSum + singleArr
+                  // 原来的样子 tableSum = tableSum + singleArr
+                  tableSum = tableSum + (singleArr + '\n')
                 }
+                console.log(singleArr)
                 // 导出excel
                 // var buffer = xlsx.build([{ name: 'sheets', data: userTableData }])
                 // fs.writeFile('./text3.xlsx', buffer, function (err) {
@@ -149,7 +177,7 @@ function modifyFolder(params) {
                   console.log(err)
                 })
                 // console.log('走访表数据提取：', userTableData)
-                console.log('走访表数据提取：', tableSum)
+                // console.log('走访表数据提取：', tableSum)
                 // }
                 // console.log('-------------end-------------')
               } catch (e) {
