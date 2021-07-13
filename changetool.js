@@ -57,143 +57,143 @@ function modifyFolder(params) {
       // var contentName = ''
       if (err) throw err
       console.log(data)
-      if (data.length === 1) {
-        for (const key of data) {
-          if (key === 'CGI.xlsx' || key === 'CGI.xls') {
-            var promise1 = new Promise((resolve, reject) => {
-              // contentName = key
-              // console.log(data)
-              var oldName = changeFolder + '\\' + key
-              console.log(oldName)
-              try {
-                // Truncate Table tel
-                // 用户表数据
-                var userTableData = []
-                var tableSum = ''
-                // 表数据
-                var tableData = xlsx.parse(oldName)
-                // 循环读取表中所有sheet的数据
-                // for (var val in tableData) {
-                // 下标数据
-                var itemData = tableData[0]
-                // console.log(itemData.data[0].push(','))
-                console.log(process.argv[2])
-                var argvVal = process.argv[2]
-                console.log(argvVal)
-                if (argvVal !== undefined) {
-                  argvVal = process.argv[2].split(',' || '，')
-                  const mapValue = itemData.data.map(item => {
-                    var insertArr = []
-                    for (let index = 0; index < argvVal.length; index++) {
-                      if (item[Number(argvVal[index]) - 1] === undefined || item[Number(argvVal[index]) - 1] === '#N/A' || item[Number(argvVal[index]) - 1] === '') {
-                        insertArr.push('null')
-                      } else {
-                        insertArr.push(item[Number(argvVal[index]) - 1])
-                      }
-                      // console.log('hello world')
-                    }
-                    return insertArr
-                  })
-                  itemData.data = mapValue
-                  // console.log(mapValue)
-                }
-                for (var index = 0; index < itemData.data.length; index++) {
-                  // 0为表头数据.
-                  //   // itemData.data[0].push(',')
-                  //   continue
-                  // }
-                  // console.log(itemData.data[index])
-                  // if (index === 2) {
-                  // 进制转换
-                  // if (index === 0) {
-                  //   itemData.data[index].push('CGI转译')
-                  // } else {
-                  //   // !!!如果选择列的话需要修改下面数组的下标
-                  //   var str = itemData.data[index][1] + ''
-                  //   var phoneNums = str.split('-')
-                  //   var firstNum = Number(phoneNums[2]).toString(16)
-                  //   var secondNum = Number(phoneNums[3]).toString(16)
-                  //   if (secondNum.length === 1) {
-                  //     secondNum = '0' + secondNum
-                  //   }
-                  //   var mergeNum = firstNum + secondNum
-                  //   itemData.data[index].push(parseInt(mergeNum, 16))
-                  // }
-                  var arr = itemData.data[index]
-                  // console.log(arr)
-                  // const singleArr = []
-                  // for (const i of arr) {
-                  //   if (i === '#N/A' || i === '' || i === undefined) {
-                  //     // eslint-disable-next-line no-const-assign
-                  //     // i = 'null'
-                  //     // console.log(i, 1111111)
-                  //     singleArr.push(['null'])
-                  //   } else if (i !== arr[arr.length - 1]) {
-                  //   // singleArr.push([i], ',')
-                  //     singleArr.push([i])
-                  //   } else {
-                  //     singleArr.push([i] + '\n')
-                  //   }
-                  // }
-                  // another way
-                  var singleArr = []
-                  var singleArr1 = arr.filter((cur, index) => {
-                    if (cur === '#N/A' || cur === '' || cur === undefined) {
-                      // eslint-disable-next-line no-const-assign
-                      // i = 'null'
-                      // console.log(i, 1111111)
-                      singleArr.push(['null'])
-                    } else if (index !== (arr.length - 1)) {
-                    // singleArr.push([i], ',')
-                      singleArr.push([cur])
+      // if (data.length === 1) {
+      for (const key of data) {
+        if (key === 'CGI.xlsx' || key === 'CGI.xls') {
+          var promise1 = new Promise((resolve, reject) => {
+            // contentName = key
+            // console.log(data)
+            var oldName = changeFolder + '\\' + key
+            console.log(oldName)
+            try {
+              // Truncate Table tel
+              // 用户表数据
+              var userTableData = []
+              var tableSum = ''
+              // 表数据
+              var tableData = xlsx.parse(oldName)
+              // 循环读取表中所有sheet的数据
+              // for (var val in tableData) {
+              // 下标数据
+              var itemData = tableData[0]
+              // console.log(itemData.data[0].push(','))
+              console.log(process.argv[2])
+              var argvVal = process.argv[2]
+              console.log(argvVal)
+              if (argvVal !== undefined) {
+                argvVal = process.argv[2].split(',' || '，')
+                const mapValue = itemData.data.map(item => {
+                  var insertArr = []
+                  for (let index = 0; index < argvVal.length; index++) {
+                    if (item[Number(argvVal[index]) - 1] === undefined || item[Number(argvVal[index]) - 1] === '#N/A' || item[Number(argvVal[index]) - 1] === '') {
+                      insertArr.push('null')
                     } else {
-                      singleArr.push([cur] + '\n')
-                      singleArr.push('\n')
+                      insertArr.push(item[Number(argvVal[index]) - 1])
                     }
-                    return singleArr
-                  })
-                  singleArr = singleArr1
-                  userTableData.push(singleArr)
-                  // 原来的样子 tableSum = tableSum + singleArr
-                  tableSum = tableSum + (singleArr + '\n')
-                }
-                console.log(singleArr)
-                // 导出excel
-                // var buffer = xlsx.build([{ name: 'sheets', data: userTableData }])
-                // fs.writeFile('./text3.xlsx', buffer, function (err) {
-                //   if (err) {
-                //     return console.error(err)
-                //   }
-                //   console.log('数据写入成功！')
-                //   console.log('--------我是分割线-------------')
-                //   console.log('读取写入的数据！')
-                //   var testData = xlsx.parse('./text3.xlsx')
-                //   console.log(testData)
-                // })
-
-                const configUrl = path.join(process.env.HOME || process.env.USERPROFILE + '/Desktop/', 'text3.txt')
-
-                fs.writeFile(configUrl, tableSum, function(err) {
-                  console.log(err)
+                    // console.log('hello world')
+                  }
+                  return insertArr
                 })
-                // console.log('走访表数据提取：', userTableData)
-                // console.log('走访表数据提取：', tableSum)
-                // }
-                // console.log('-------------end-------------')
-              } catch (e) {
-                // 输出日志
-                console.log('excel读取异常,error=%s', e.stack)
+                itemData.data = mapValue
+                // console.log(mapValue)
               }
-              resolve(1)
-            })
-          }
+              for (var index = 0; index < itemData.data.length; index++) {
+                // 0为表头数据.
+                //   // itemData.data[0].push(',')
+                //   continue
+                // }
+                // console.log(itemData.data[index])
+                // if (index === 2) {
+                // 进制转换
+                // if (index === 0) {
+                //   itemData.data[index].push('CGI转译')
+                // } else {
+                //   // !!!如果选择列的话需要修改下面数组的下标
+                //   var str = itemData.data[index][1] + ''
+                //   var phoneNums = str.split('-')
+                //   var firstNum = Number(phoneNums[2]).toString(16)
+                //   var secondNum = Number(phoneNums[3]).toString(16)
+                //   if (secondNum.length === 1) {
+                //     secondNum = '0' + secondNum
+                //   }
+                //   var mergeNum = firstNum + secondNum
+                //   itemData.data[index].push(parseInt(mergeNum, 16))
+                // }
+                var arr = itemData.data[index]
+                // console.log(arr)
+                // const singleArr = []
+                // for (const i of arr) {
+                //   if (i === '#N/A' || i === '' || i === undefined) {
+                //     // eslint-disable-next-line no-const-assign
+                //     // i = 'null'
+                //     // console.log(i, 1111111)
+                //     singleArr.push(['null'])
+                //   } else if (i !== arr[arr.length - 1]) {
+                //   // singleArr.push([i], ',')
+                //     singleArr.push([i])
+                //   } else {
+                //     singleArr.push([i] + '\n')
+                //   }
+                // }
+                // another way
+                var singleArr = []
+                var singleArr1 = arr.filter((cur, index) => {
+                  if (cur === '#N/A' || cur === '' || cur === undefined) {
+                    // eslint-disable-next-line no-const-assign
+                    // i = 'null'
+                    // console.log(i, 1111111)
+                    singleArr.push(['null'])
+                  } else if (index !== (arr.length - 1)) {
+                    // singleArr.push([i], ',')
+                    singleArr.push([cur])
+                  } else {
+                    singleArr.push([cur] + '\n')
+                    singleArr.push('\n')
+                  }
+                  return singleArr
+                })
+                singleArr = singleArr1
+                userTableData.push(singleArr)
+                // 原来的样子 tableSum = tableSum + singleArr
+                tableSum = tableSum + (singleArr + '\n')
+              }
+              console.log(singleArr)
+              // 导出excel
+              // var buffer = xlsx.build([{ name: 'sheets', data: userTableData }])
+              // fs.writeFile('./text3.xlsx', buffer, function (err) {
+              //   if (err) {
+              //     return console.error(err)
+              //   }
+              //   console.log('数据写入成功！')
+              //   console.log('--------我是分割线-------------')
+              //   console.log('读取写入的数据！')
+              //   var testData = xlsx.parse('./text3.xlsx')
+              //   console.log(testData)
+              // })
+
+              const configUrl = path.join(process.env.HOME || process.env.USERPROFILE + '/Desktop/', 'text3.txt')
+
+              fs.writeFile(configUrl, tableSum, function(err) {
+                console.log(err)
+              })
+              // console.log('走访表数据提取：', userTableData)
+              // console.log('走访表数据提取：', tableSum)
+              // }
+              // console.log('-------------end-------------')
+            } catch (e) {
+              // 输出日志
+              console.log('excel读取异常,error=%s', e.stack)
+            }
+            resolve(1)
+          })
         }
-        Promise.all([promise1]).then(() => {
-          console.log('请查看桌面text3.txt文件...')
-        })
-      } else {
-        console.log('请放入：CGI.xlsx的excel文件！')
       }
+      Promise.all([promise1]).then(() => {
+        console.log('请查看桌面text3.txt文件...')
+      })
+      // } else {
+      //   console.log('请放入：CGI.xlsx的excel文件！')
+      // }
     })
   })
   // return new Promise((resolve, reject) => {})
