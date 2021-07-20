@@ -142,22 +142,24 @@ function modifyFolder(params) {
                     // eslint-disable-next-line no-const-assign
                     // i = 'null'
                     // console.log(i, 1111111)
-                    singleArr.push(['null'])
+                    return singleArr.push('null')
                   } else if (index !== (arr.length - 1)) {
                     // singleArr.push([i], ',')
-                    singleArr.push([cur])
+                    return singleArr.push((cur + '').replace(/\t/, ''))
+                    // console.log([(cur + '').replace(/\t|\s/, ''), cur])
                   } else {
-                    singleArr.push([cur] + '\n')
-                    singleArr.push('\n')
+                    return singleArr.push((cur + '').replace(/\t/, '') + '\n')
+                    // singleArr.push('\n')
                   }
-                  return singleArr
+                  // return singleArr
                 })
-                singleArr = singleArr1
-                userTableData.push(singleArr)
+
+                /* console.log(singleArr, singleArr1) [ '791A791920027134', '都昌县都昌镇人民政府', '江西', '九江', '99791027240', '统付\n' ] [ '791A791920027134\t', '都昌县都昌镇人民政府', '江西', '九江', 99791027240, '统付' ] singleArr, singleArr1这俩不一样 */
+                // singleArr = singleArr1
+                userTableData.push(singleArr1)
                 // 原来的样子 tableSum = tableSum + singleArr
                 tableSum = tableSum + (singleArr + '\n')
               }
-              console.log(singleArr)
               // 导出excel
               // var buffer = xlsx.build([{ name: 'sheets', data: userTableData }])
               // fs.writeFile('./text3.xlsx', buffer, function (err) {
