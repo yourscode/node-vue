@@ -60,7 +60,7 @@ function modifyFolder(params) {
               var argvVal = process.argv[2]
 
               var flagStart = true
-              if (argvVal.length === 1) {
+              if (argvVal && argvVal.length === 1) {
                 flagStart = false
                 argvVal = undefined
               }
