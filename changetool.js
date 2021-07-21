@@ -1,26 +1,5 @@
-var express = require('express')
-const mysql = require('mysql')
-const nodeExcel = require('excel-export')
 const fs = require('fs')
-const chrome = require('child_process')
 const path = require('path')
-var app = express()
-// var pool = mysql.createPool({
-//   host: 'localhost',
-//   user: 'root',
-//   password: '123456',
-//   port: 3306,
-//   database: 'basedata',
-//   connectionLimit: 1000000,
-//   multipleStatements: true
-// })
-// app.get('/', function (req, res) {
-//   res.send('welcome！')
-// })
-
-// app.listen(3000, function () {
-//   console.log('app is listen at port 3000...')
-// })
 
 var xlsx = require('node-xlsx')
 const { type } = require('os')
@@ -59,7 +38,7 @@ function modifyFolder(params) {
       console.log(data)
       // if (data.length === 1) {
       for (const key of data) {
-        if (key === 'CGI.xlsx' || key === 'CGI.xls') {
+        if (key === 'CGI.xlsx' || key === 'CGI.xls' || key === 'cgi.xlsx' || key === 'cgi.xls') {
           var promise1 = new Promise((resolve, reject) => {
             // contentName = key
             // console.log(data)
@@ -79,9 +58,19 @@ function modifyFolder(params) {
               // console.log(itemData.data[0].push(','))
               console.log(process.argv[2])
               var argvVal = process.argv[2]
-              console.log(argvVal)
+
+              var flagStart = true
+              if (argvVal.length === 1) {
+                flagStart = false
+                argvVal = undefined
+              }
               if (argvVal !== undefined) {
                 argvVal = process.argv[2].split(',' || '，')
+                if (argvVal.indexOf('f') !== -1) {
+                  flagStart = false
+                  argvVal = argvVal.slice(0, argvVal.length - 1)
+                  console.log(argvVal.indexOf('f'), argvVal)
+                }
                 const mapValue = itemData.data.map(item => {
                   var insertArr = []
                   for (let index = 0; index < argvVal.length; index++) {
@@ -95,8 +84,10 @@ function modifyFolder(params) {
                   return insertArr
                 })
                 itemData.data = mapValue
-                // console.log(mapValue)
+                // console.log(itemData.data)
               }
+              var itemIndex = ''
+              var itemFlag = false
               for (var index = 0; index < itemData.data.length; index++) {
                 // 0为表头数据.
                 //   // itemData.data[0].push(',')
@@ -105,20 +96,29 @@ function modifyFolder(params) {
                 // console.log(itemData.data[index])
                 // if (index === 2) {
                 // 进制转换
-                // if (index === 0) {
-                //   itemData.data[index].push('CGI转译')
-                // } else {
-                //   // !!!如果选择列的话需要修改下面数组的下标
-                //   var str = itemData.data[index][1] + ''
-                //   var phoneNums = str.split('-')
-                //   var firstNum = Number(phoneNums[2]).toString(16)
-                //   var secondNum = Number(phoneNums[3]).toString(16)
-                //   if (secondNum.length === 1) {
-                //     secondNum = '0' + secondNum
-                //   }
-                //   var mergeNum = firstNum + secondNum
-                //   itemData.data[index].push(parseInt(mergeNum, 16))
-                // }
+                if (flagStart) {
+                  if (index === 0) {
+                    for (const item of itemData.data[0]) {
+                      if (item === 'CGI') {
+                        itemIndex = itemData.data[0].indexOf(item)
+                        itemFlag = true
+                        itemData.data[index].push('CGI转译')
+                      }
+                    }
+                  } else {
+                    if (itemFlag) {
+                      var str = itemData.data[index][itemIndex] + ''
+                      var phoneNums = str.split('-')
+                      var firstNum = Number(phoneNums[2]).toString(16)
+                      var secondNum = Number(phoneNums[3]).toString(16)
+                      if (secondNum.length === 1) {
+                        secondNum = '0' + secondNum
+                      }
+                      var mergeNum = firstNum + secondNum
+                      itemData.data[index].push(parseInt(mergeNum, 16))
+                    }
+                  }
+                }
                 var arr = itemData.data[index]
                 // console.log(arr)
                 // const singleArr = []
@@ -140,48 +140,25 @@ function modifyFolder(params) {
                 var singleArr1 = arr.filter((cur, index) => {
                   if (cur === '#N/A' || cur === '' || cur === undefined) {
                     // eslint-disable-next-line no-const-assign
-                    // i = 'null'
-                    // console.log(i, 1111111)
                     return singleArr.push('null')
                   } else if (index !== (arr.length - 1)) {
-                    // singleArr.push([i], ',')
-                    return singleArr.push((cur + '').replace(/\t/, ''))
-                    // console.log([(cur + '').replace(/\t|\s/, ''), cur])
+                    return singleArr.push((cur + '').replace(/\s$/, ''))
                   } else {
-                    return singleArr.push((cur + '').replace(/\t/, '') + '\n')
+                    return singleArr.push((cur + '').replace(/\s$/, '') + '\n')
                     // singleArr.push('\n')
                   }
-                  // return singleArr
                 })
 
-                /* console.log(singleArr, singleArr1) [ '791A791920027134', '都昌县都昌镇人民政府', '江西', '九江', '99791027240', '统付\n' ] [ '791A791920027134\t', '都昌县都昌镇人民政府', '江西', '九江', 99791027240, '统付' ] singleArr, singleArr1这俩不一样 */
-                // singleArr = singleArr1
-                userTableData.push(singleArr1)
+                userTableData.push(singleArr)
                 // 原来的样子 tableSum = tableSum + singleArr
-                tableSum = tableSum + (singleArr + '\n')
+                tableSum = tableSum + singleArr
               }
-              // 导出excel
-              // var buffer = xlsx.build([{ name: 'sheets', data: userTableData }])
-              // fs.writeFile('./text3.xlsx', buffer, function (err) {
-              //   if (err) {
-              //     return console.error(err)
-              //   }
-              //   console.log('数据写入成功！')
-              //   console.log('--------我是分割线-------------')
-              //   console.log('读取写入的数据！')
-              //   var testData = xlsx.parse('./text3.xlsx')
-              //   console.log(testData)
-              // })
 
               const configUrl = path.join(process.env.HOME || process.env.USERPROFILE + '/Desktop/', 'text3.txt')
 
               fs.writeFile(configUrl, tableSum, function(err) {
                 console.log(err)
               })
-              // console.log('走访表数据提取：', userTableData)
-              // console.log('走访表数据提取：', tableSum)
-              // }
-              // console.log('-------------end-------------')
             } catch (e) {
               // 输出日志
               console.log('excel读取异常,error=%s', e.stack)
@@ -203,103 +180,6 @@ function modifyFolder(params) {
 
 modifyFolder()
 
-// 读取Excel数据
-/*
-try {
-  // pool.getConnection((err, conn) => {
-  //   if (err) throw err
-  //   var sql = `Truncate Table tel;`
-  //   conn.query(sql, (err, result) => {
-  //     if (err) throw err
-  //     console.log(result)
-  //     // res.json({ code: 200, msg: result })
-  //     // res.send("搜索成功!");
-  //   })
-  //   conn.release()
-  // })
-
-  // Truncate Table tel
-  // 用户表数据
-  var userTableData = []
-  // 表数据
-  var tableData = xlsx.parse(aimFile)
-  // 循环读取表数据
-  for (var val in tableData) {
-    // 下标数据
-    var itemData = tableData[val]
-    // console.log(itemData)
-    // var regx1 = /(1[3|4|5|7|8|9][\d]{9}|0[\d]{2,3}-[\d]{7,8}|400[-]?[\d]{3}[-]?[\d]{4})/g
-    // var regx = /(1[\d]{2}[\s]?[\d]{4}[\s]?[\d]{4})/g
-    // var str = '保卫处万处长130 6517 3126,198802999011沟通人员进校'
-    // var phoneNums = str.match(regx)
-    // console.log(phoneNums)
-    // 循环读取用户表数据
-    for (var index in itemData.data) {
-      // 0为表头数据
-      if (index === 0) {
-        continue
-      }
-      var regx = /(1[\d]{2}[\s]?[\d]{4}[\s]?[\d]{4})/g
-      var str = itemData.data[index][9] + ''
-      var phoneNums = str.match(regx)
-      // console.log(phoneNums)
-      if (phoneNums !== null) {
-        userTableData.push(...phoneNums)
-      }
-    }
-    console.log(userTableData)
-    var phoneData = [];
-    (async() => {
-      pool.getConnection((err, conn) => {
-        if (err) throw err
-        var sql = `Truncate Table tel;`
-        conn.query(sql, (err, result) => {
-          if (err) throw err
-          console.log(result)
-          // res.json({ code: 200, msg: result })
-          // res.send("搜索成功!");
-        })
-        conn.release()
-      })
-      for (const i of userTableData) {
-        const sql = `insert tel(phoneNumber) values('${i.replace(/\s/g, '')}')`
-        await insert(sql)
-        phoneData.push([i.replace(/\s/g, '')])
-      }
-    })()
-    // 第二种方法
-    // pool.getConnection((err, conn) => {
-    //   if (err) throw err
-    //   var sql = `insert tel(phoneNumber) values ?;`
-    //   conn.query(sql, [phoneData], (err, result) => {
-    //     if (err) throw err
-    //     console.log(result)
-    //   })
-    //   conn.release()
-    // })
-    // console.log(phoneData, phoneData.length)
-  }
-
-  console.log('-------------end-------------')
-} catch (e) {
-  // 输出日志
-  console.log('excel读取异常,error=%s', e.stack)
-}
-*/
-// const cols = ['phoneNumber', '地市', '集团名称(与证件上一致)', '集团成员手机号', '建档集团编号(92、JX)', '建档集团名称',
-//   '区县编号',
-//   '看管人BOSS工号',
-//   '看管人姓名',
-//   '看管人手机号码',
-//   '集团成员姓名',
-//   '集团成员职务',
-//   '关键成员标识\n(下拉可选)',
-//   '成员属性\n(下拉可选)',
-//   '看管线条\n(下拉可选)',
-//   '主管/网格长姓名',
-//   '主管/网格长工号',
-//   '主管/网格长手机号码',
-//   '备注']
 // const first = new Promise((resolve, reject) => {
 //   setTimeout(resolve, 500, '第一个')
 // })
