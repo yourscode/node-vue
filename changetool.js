@@ -61,8 +61,10 @@ function modifyFolder(params) {
 
               var flagStart = true
               if (argvVal && argvVal.length === 1) {
-                flagStart = false
-                argvVal = undefined
+                if (argvVal === 'f') {
+                  flagStart = false
+                  argvVal = undefined
+                }
               }
               if (argvVal !== undefined) {
                 argvVal = process.argv[2].split(',' || '，')
