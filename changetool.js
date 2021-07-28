@@ -155,6 +155,7 @@ function modifyFolder(params) {
                 // 原来的样子 tableSum = tableSum + singleArr
                 tableSum = tableSum + singleArr
               }
+              console.log(userTableData.length)
 
               const configUrl = path.join(process.env.HOME || process.env.USERPROFILE + '/Desktop/', 'text3.txt')
 
