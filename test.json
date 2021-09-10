@@ -1,0 +1,31 @@
+let array = [
+    {
+        //列对应关系，即标题,此处也可以使用field1：value形式，相应的工具类中也要修改
+        fieldObj: {
+            field1: {
+                alias: "字段1"
+            },
+            field2: {
+                alias: "字段2"
+            },
+            field3: {
+                alias: "字段3"
+            }
+        },
+        //fieldData:sql查询出来数据
+        fieldData: [
+            {
+                field1: "内容1-1",
+                field2: "内容1-2",
+                field3: "内容1-3"
+            },
+            {
+                field1: "内容2-1",
+                field2: "内容2-2",
+                field3: "内容2-3"
+            },
+        ],
+        //当前的sheet名称
+        sheetName: "统计sheet"
+    }
+];
