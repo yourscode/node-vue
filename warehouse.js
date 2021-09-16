@@ -43,22 +43,31 @@ var getMonth = (index, res) => {
       conf.stylesXmlFile = 'styles.xml'
       conf.cols = []
       conf.rows = []
+      var conf2 = {}
+      conf2.cols = []
+      conf2.rows = []
+      conf2.stylesXmlFile = 'styles.xml'
+      conf2.name = 'project'
       var conf3 = {}
+      conf3.cols = []
+      conf3.rows = []
       conf3.stylesXmlFile = 'styles.xml'
-      conf3.name = 'project'
+      conf3.name = 'maintain'
       if (err) {
       // 执行出错
         throw err
       } else {
       // var sql = `SELECT DISTINCT a.phoneNumber,b.地市,b.看管人姓名,b.区县编号 from tel a INNER JOIN sheet1 b on a.phoneNumber = b.看管人手机号码;
       // drop table test;CREATE TABLE test(phone_id VARCHAR(20),userName VARCHAR(20));`
-        var sql = `select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人, 领用申请单创建人, 领用申请单创建日期,平均价格, 金额
-      from 出库通知单2018 WHERE 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31';select 项目 from 出库通知单2018 WHERE 领用申请单创建日期 >='2018-01-01' and 领用申请单创建日期 <='2018-01-31' GROUP BY 项目;`
+        var sql = `select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门, 领用申请单创建人, 领用申请单创建日期,平均价格, 金额
+      from 出库通知单2018 a LEFT JOIN staff b on a.领用申请单申请人 = b.name WHERE 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31';select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额 from 出库通知单2018 a LEFT JOIN staff b on a.领用申请单申请人 = b.name WHERE not 项目编码='' and 领用申请单创建日期 >='2018-01-01' and 领用申请单创建日期 <='2018-01-31';select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额 
+      from 出库通知单2018 a LEFT JOIN staff b on a.领用申请单申请人 = b.name WHERE 项目编码='' 
+      and 领用申请单创建日期 >='2018-01-01' and 领用申请单创建日期 <='2018-01-31' and b.department in ('网络部','无线中心','有线业务部','网络部');`
         conn.query(sql, (err, data) => {
           if (err) throw err
           // console.log(data)
 
-          const tempArr = ['领用申请单号', '物料编号', '物料名称', '单位', '领用申请数量', '累计交货数量', '领用类型', '项目编码', '项目', '任务编码', '任务', '支出类型名称', '施工单位', '领用申请单申请人', '领用申请单创建人', '领用申请单创建日期', '平均价格', '金额']
+          const tempArr = ['领用申请单号', '物料编号', '物料名称', '单位', '领用申请数量', '累计交货数量', '领用类型', '项目编码', '项目', '任务编码', '任务', '支出类型名称', '施工单位', '领用申请单申请人', '所属部门', '领用申请单创建人', '领用申请单创建日期', '平均价格', '金额']
           for (const item of tempArr) {
             // if (tempArr.indexOf(key[]) !== -1) {
             const tits = {}
@@ -68,6 +77,8 @@ var getMonth = (index, res) => {
             tits.type = 'string'
             // 将每一个表头加入cols中
             conf.cols.push(tits)
+            conf2.cols.push(tits)
+            conf3.cols.push(tits)
             // }
           }
           for (const key of data[0]) {
@@ -79,24 +90,25 @@ var getMonth = (index, res) => {
             conf.rows.push(littlerow)
           }
           // console.log(conf.cols, 111111111111111111111111)
-          // console.log(rows)
-          // const datas = []
-          // 循环数据库得到的数据
-          // console.log(datas)
           conf.name = monthArr[index - 1]
-          // conf3相关代码
-          conf3.cols = []
-          conf3.rows = []
-          conf3.cols.push(
-            { caption: '项目',
-              type: 'string' }
-          )
+          // conf2相关代码
           for (const key of data[1]) {
-            conf3.rows.push([key['项目']])
+            var littlerow2 = []
+            for (const item of tempArr) {
+              littlerow2.push(key[item])
+            }
+            conf2.rows.push(littlerow2)
+          }
+          for (const key of data[2]) {
+            var littlerow3 = []
+            for (const item of tempArr) {
+              littlerow3.push(key[item])
+            }
+            conf3.rows.push(littlerow3)
           }
           console.log('conf查询结果出来了++' + index + '月份')
           // 将所有数据写入nodeExcel中
-          const result = nodeExcel.execute([conf, conf3])
+          const result = nodeExcel.execute([conf, conf2, conf3])
           // 设置响应头，在Content-Type中加入编码格式为utf-8即可实现文件内容支持中文
           res.setHeader('Content-Type', 'application/vnd.openxmlformats;charset=utf-8')
           // 设置下载文件命名，中文文件名可以通过编码转化写入到header中。
