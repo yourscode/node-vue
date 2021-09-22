@@ -53,6 +53,27 @@ var getMonth = (index, res) => {
       conf3.rows = []
       conf3.stylesXmlFile = 'styles.xml'
       conf3.name = 'maintain'
+      var conf4 = {}
+      conf4.cols = []
+      conf4.rows = []
+      conf4.stylesXmlFile = 'styles.xml'
+      conf4.name = 'others'
+      // 汇总表
+      var conf5 = {}
+      conf5.cols = []
+      conf5.rows = []
+      conf5.stylesXmlFile = 'styles.xml'
+      conf5.name = 'project-sum'
+      var conf6 = {}
+      conf6.cols = []
+      conf6.rows = []
+      conf6.stylesXmlFile = 'styles.xml'
+      conf6.name = 'maintain-sum'
+      var conf7 = {}
+      conf7.cols = []
+      conf7.rows = []
+      conf7.stylesXmlFile = 'styles.xml'
+      conf7.name = 'others-sum'
       if (err) {
       // 执行出错
         throw err
@@ -60,14 +81,20 @@ var getMonth = (index, res) => {
       // var sql = `SELECT DISTINCT a.phoneNumber,b.地市,b.看管人姓名,b.区县编号 from tel a INNER JOIN sheet1 b on a.phoneNumber = b.看管人手机号码;
       // drop table test;CREATE TABLE test(phone_id VARCHAR(20),userName VARCHAR(20));`
         var sql = `select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门, 领用申请单创建人, 领用申请单创建日期,平均价格, 金额
-      from 出库通知单2018 a LEFT JOIN staff b on a.领用申请单申请人 = b.name WHERE 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31';select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额 from 出库通知单2018 a LEFT JOIN staff b on a.领用申请单申请人 = b.name WHERE not 项目编码='' and 领用申请单创建日期 >='2018-01-01' and 领用申请单创建日期 <='2018-01-31';select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额 
-      from 出库通知单2018 a LEFT JOIN staff b on a.领用申请单申请人 = b.name WHERE 项目编码='' 
-      and 领用申请单创建日期 >='2018-01-01' and 领用申请单创建日期 <='2018-01-31' and b.department in ('网络部','无线中心','有线业务部','网络部');`
+      from 出库通知单2018 a LEFT JOIN staff b on SUBSTRING_INDEX(a.领用申请单创建人,'@', 1) = SUBSTRING_INDEX(b.email,'@', 1) WHERE 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31';
+      select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额 from 出库通知单2018 a LEFT JOIN staff b on SUBSTRING_INDEX(a.领用申请单创建人,'@', 1) = SUBSTRING_INDEX(b.email,'@', 1) WHERE not 项目编码='' and 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31';
+      select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额  from 出库通知单2018 a LEFT JOIN staff b on SUBSTRING_INDEX(a.领用申请单创建人,'@', 1) = SUBSTRING_INDEX(b.email,'@', 1) WHERE 项目编码='' and 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31' and b.department in ('网络部','无线中心','有线业务部','网络部');
+      select c.* from (select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人, ifnull(b.department,0) 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额 from 出库通知单2018 a LEFT JOIN staff b on SUBSTRING_INDEX(a.领用申请单创建人,'@', 1) = SUBSTRING_INDEX(b.email,'@', 1) WHERE 项目编码='' and 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31') c where c.所属部门 not in ('网络部','无线中心','有线业务部','网络部');
+      select h.所属部门,h.施工单位,h.物料名称,h.单位,sum(h.领用申请数量) 领用数量,count(h.物料名称) 领用次数,sum(h.金额) 领用物资总价  from (select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额 from 出库通知单2018 a LEFT JOIN staff b on SUBSTRING_INDEX(a.领用申请单创建人,'@', 1) = SUBSTRING_INDEX(b.email,'@', 1) WHERE not 项目编码='' and 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31') h GROUP BY h.所属部门,h.施工单位,h.物料名称,h.单位;
+      select h.所属部门,h.施工单位,h.物料名称,h.单位,sum(h.领用申请数量) 领用数量,count(h.物料名称) 领用次数,sum(h.金额) 领用物资总价  from (select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人,b.department 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额  from 出库通知单2018 a LEFT JOIN staff b on SUBSTRING_INDEX(a.领用申请单创建人,'@', 1) = SUBSTRING_INDEX(b.email,'@', 1) WHERE 项目编码='' and 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31' and b.department in ('网络部','无线中心','有线业务部','网络部')) h GROUP BY h.所属部门,h.施工单位,h.物料名称,h.单位;
+      select h.所属部门,h.施工单位,h.物料名称,h.单位,sum(h.领用申请数量) 领用数量,count(h.物料名称) 领用次数,sum(h.金额) 领用物资总价  from (select c.* from (select 领用申请单号, 物料编号, 物料名称, 单位, 领用申请数量, 累计交货数量, 领用类型, 项目编码, 项目, 任务编码,任务, 支出类型名称, 施工单位, 领用申请单申请人, ifnull(b.department,0) 所属部门,领用申请单创建人, 领用申请单创建日期,平均价格, 金额 from 出库通知单2018 a LEFT JOIN staff b on SUBSTRING_INDEX(a.领用申请单创建人,'@', 1) = SUBSTRING_INDEX(b.email,'@', 1) WHERE 项目编码='' and 领用申请单创建日期 >='2018-${index > 9 ? index : '0' + index}-${index > 9 ? index : '0' + index}' and 领用申请单创建日期 <='2018-${index > 9 ? index : '0' + index}-31') c where c.所属部门 not in ('网络部','无线中心','有线业务部','网络部')) h GROUP BY h.所属部门,h.施工单位,h.物料名称,h.单位;`
         conn.query(sql, (err, data) => {
           if (err) throw err
           // console.log(data)
 
           const tempArr = ['领用申请单号', '物料编号', '物料名称', '单位', '领用申请数量', '累计交货数量', '领用类型', '项目编码', '项目', '任务编码', '任务', '支出类型名称', '施工单位', '领用申请单申请人', '所属部门', '领用申请单创建人', '领用申请单创建日期', '平均价格', '金额']
+          const tempSum = ['所属部门', '施工单位', '物料名称', '单位', '领用数量', '领用次数', '领用物资总价']
+          // 明细表遍历
           for (const item of tempArr) {
             // if (tempArr.indexOf(key[]) !== -1) {
             const tits = {}
@@ -79,6 +106,22 @@ var getMonth = (index, res) => {
             conf.cols.push(tits)
             conf2.cols.push(tits)
             conf3.cols.push(tits)
+            conf4.cols.push(tits)
+            // }
+          }
+          // 汇总表遍历
+          for (const item of tempSum) {
+            // if (tempArr.indexOf(key[]) !== -1) {
+            const tits = {}
+            // 添加内容
+            tits.caption = item
+            // 添加对应类型，这类型对应数据库中的类型，入number，data但一般导出的都是转换为string类型的
+            tits.type = 'string'
+            // 将每一个表头加入cols中
+            conf5.cols.push(tits)
+            conf6.cols.push(tits)
+            conf7.cols.push(tits)
+            // conf4.cols.push(tits)
             // }
           }
           for (const key of data[0]) {
@@ -106,13 +149,42 @@ var getMonth = (index, res) => {
             }
             conf3.rows.push(littlerow3)
           }
+          for (const key of data[3]) {
+            var littlerow4 = []
+            for (const item of tempArr) {
+              littlerow4.push(key[item])
+            }
+            conf4.rows.push(littlerow4)
+            // console.log(littlerow4)
+          }
+          for (const key of data[4]) {
+            var littlerow5 = []
+            for (const item of tempSum) {
+              littlerow5.push(key[item] + '')
+            }
+            conf5.rows.push(littlerow5)
+          }
+          for (const key of data[5]) {
+            var littlerow6 = []
+            for (const item of tempSum) {
+              littlerow6.push(key[item] + '')
+            }
+            conf6.rows.push(littlerow6)
+          }
+          for (const key of data[6]) {
+            var littlerow7 = []
+            for (const item of tempSum) {
+              littlerow7.push(key[item] + '')
+            }
+            conf7.rows.push(littlerow7)
+          }
           console.log('conf查询结果出来了++' + index + '月份')
           // 将所有数据写入nodeExcel中
-          const result = nodeExcel.execute([conf, conf2, conf3])
+          const result = nodeExcel.execute([conf, conf2, conf3, conf4, conf5, conf6, conf7])
           // 设置响应头，在Content-Type中加入编码格式为utf-8即可实现文件内容支持中文
           res.setHeader('Content-Type', 'application/vnd.openxmlformats;charset=utf-8')
           // 设置下载文件命名，中文文件名可以通过编码转化写入到header中。
-          res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(`${index}月出库通知`) + '.xlsx')
+          res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(`2018年${index}月出库通知`) + '.xlsx')
           // 将文件内容传入
           res.end(result, 'binary')
         })
@@ -219,11 +291,11 @@ app.get('/exportExcel12', function(req, res) {
     getMonth(12, thisres)
   })()
 })
-chrome.exec('start http://localhost:3000/exportExcel1')
-// for (let i = 1; i <= 12; i++) {
-//   const url = 'start http://localhost:3000/exportExcel' + i
-//   chrome.exec(url)
-// }
+// chrome.exec('start http://localhost:3000/exportExcel1')
+for (let i = 1; i <= 12; i++) {
+  const url = 'start http://localhost:3000/exportExcel' + i
+  chrome.exec(url)
+}
 // chrome.exec('start http://localhost:3000/exportExcel3')
 // const first = new Promise((resolve, reject) => {
 //   setTimeout(resolve, 500, '第一个')
