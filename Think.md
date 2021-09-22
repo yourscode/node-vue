@@ -126,9 +126,29 @@ export default new Router({
     **VNode**：虚拟DOM，其实就是一个JS对象
 ```
 
+### 关于this
+
+```JavaScript
+我的答案：
+person1  person2
+window  person2 X ==>window 
+window  window  person2
+window  window  window  all X
+
+
+person1   person2
+window   window   all X  person1   person1
+window   window   person2
+person1   person2   person1
 
 
 
+window   window   person2
+
+obj   person2   obj
+
+链接：https://mp.weixin.qq.com/s/hYm0JgBI25grNG_2sCRlTA
+```
 
 
 
